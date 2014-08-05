@@ -163,9 +163,21 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         if(![self.currentTrack.track.uri isEqual:firstTrack.track.uri]){
             self.currentTrack = firstTrack;
             [self.streamingPlayer playURI:self.currentTrack.track.uri callback:^(NSError *error) {
+
                 if (error != nil) {
                     NSLog(@"*** Enabling playback got error: %@", error);
                     return;
+                }
+                
+                if(self.currentTrack.offset > 0){
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.streamingPlayer seekToOffset:self.currentTrack.offset callback:^(NSError *error) {
+                            if (error) {
+                                NSLog(@"*** Enabling playback got error: %@", error);
+                                return;
+                            }
+                        }];
+                    });
                 }
             }];
         }
@@ -175,7 +187,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - Audio delegate
-
 - (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveMessage:(NSString *)message
 {
     NSLog(@"message: %@", message);

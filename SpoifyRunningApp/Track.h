@@ -13,5 +13,6 @@
 
 @property (nonatomic) SPTTrack *track;
 @property (nonatomic) double spm;
+@property (nonatomic) NSTimeInterval offset;
 
 @end
