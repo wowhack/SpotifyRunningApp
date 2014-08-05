@@ -36,6 +36,17 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    for (NSString* family in [UIFont familyNames])
+    {
+        NSLog(@"%@", family);
+        
+        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+        {
+            NSLog(@"  %@", name);
+        }
+    }
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     [[UINavigationBar appearance] setTitleTextAttributes: @{
@@ -43,7 +54,6 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
                                                             NSFontAttributeName: [UIFont fontWithName:@"Proxima Nova" size:18]
                                                             }];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    
     
     self.playlistViewCtrl = [[PlaylistViewController alloc] init];
     UINavigationController *navView = [[UINavigationController alloc] initWithRootViewController:self.playlistViewCtrl];

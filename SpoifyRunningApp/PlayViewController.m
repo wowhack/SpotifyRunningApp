@@ -10,6 +10,7 @@
 #import "Playlist.h"
 #import "Track.h"
 #import <Spotify/Spotify.h>
+#import <QuartzCore/QuartzCore.h>
 
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 
@@ -59,6 +60,8 @@
             AFHTTPRequestOperationManager *httpManager = [AFHTTPRequestOperationManager manager];
             httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
             for(SPTTrack *sptTrack in playlistSnapshot.firstTrackPage.items){
+                NSLog(@"sptTrack: %@", sptTrack.name);
+                
                 Track *track = [[Track alloc] init];
                 track.track = sptTrack;
                 
@@ -84,6 +87,7 @@
                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                         NSLog(@"Error: %@", error);
                     }];
+                    
                 } else {
                     NSLog(@"title: %@, spm: %@", sptTrack.name, trackSpm);
                     track.spm = [trackSpm intValue];
@@ -92,8 +96,10 @@
             }
             
             NSLog(@"count: %ld", (unsigned long)[self.playlist.tracks count]);
-            Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-            self.currentTrack = firstTrack;
+            if([self.playlist.tracks count] > 0){
+                Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
+                self.currentTrack = firstTrack;
+            }
             
             [self.tableView reloadData];
         }];
@@ -125,7 +131,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if(section == 0){
-        return 3;
+        return 2;
     } else {
         return [self.playlist.tracks count];
     }
@@ -135,37 +141,70 @@
 {
     UITableViewCell *cell = [[UITableViewCell alloc] init];
     
-    
     if(indexPath.section == 0 && indexPath.row == 0){
-       cell.textLabel.text = self.currentTrack.track.name;
+        UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, CGRectGetWidth(self.tableView.bounds), 20)];
+        header.textAlignment = NSTextAlignmentCenter;
+        header.text = @"Strides Per Minute";
+        header.font = [UIFont fontWithName:@"Proxima Nova" size:20];
+        header.textColor = [UIColor lightGrayColor];
+        
+        UILabel *spm =  [[UILabel alloc] initWithFrame:CGRectMake(0, 40, CGRectGetWidth(self.tableView.bounds), 60)];
+        spm.textAlignment = NSTextAlignmentCenter;
+        spm.text = [NSString stringWithFormat:@"%d", _spm];
+        spm.font = [UIFont fontWithName:@"ProximaNova-Light" size:60];
+        spm.textColor = [UIColor whiteColor];
+        
+        [cell.contentView addSubview:header];
+        [cell.contentView addSubview:spm];
+
+        cell.separatorInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, cell.bounds.size.width);
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if(indexPath.section == 0 && indexPath.row == 1){
-        cell.textLabel.text = [NSString stringWithFormat:@"Steps per minute: %d", _spm];
-    } else if(indexPath.section == 0 && indexPath.row == 2){
-        cell.textLabel.text = @"PLAY";
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        UIButton *play = [[UIButton  alloc] initWithFrame:CGRectMake(20, 5, CGRectGetWidth(self.tableView.bounds) - 40, 35)];
+        play.backgroundColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
+        play.titleLabel.textAlignment = NSTextAlignmentCenter;
+        play.layer.cornerRadius = 18.0;
+        play.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:20];
+        play.titleLabel.textColor = [UIColor whiteColor];
+        [cell.contentView addSubview:play];
+        [play setTitle:@"Play" forState:UIControlStateNormal];
+        [play addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        cell.separatorInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, cell.bounds.size.width);
     } else {
         Track *track = [self.playlist.tracks objectAtIndex:indexPath.row];
         
         UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(15, 5, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
         title.text = track.track.name;
         
-        UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 35, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+        if(indexPath.row == 0){
+            title.textColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
+        } else {
+            title.textColor = [UIColor whiteColor];
+        }
+        title.font = [UIFont fontWithName:@"Proxima Nova" size:18];
+
+        UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
         
         if( [track.track.artists count] > 0){
             SPTPartialArtist *artist = (SPTPartialArtist*)track.track.artists.firstObject;
             artistLabel.text = artist.name;
         }
+
+        artistLabel.font = [UIFont fontWithName:@"Proxima Nova" size:16];
+        artistLabel.textColor = [UIColor grayColor];
         
-        
-        UILabel *spm = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.tableView.bounds) - 40, 10, 50, 30)];
+        UILabel *spm = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.tableView.bounds) - 40, 5, 50, 30)];
         spm.text = [NSString stringWithFormat:@"%d", track.spm];
+        spm.font = [UIFont fontWithName:@"Proxima Nova" size:16];
+        spm.textColor = [UIColor grayColor];
         
         [cell.contentView addSubview:title];
         [cell.contentView addSubview:artistLabel];
         [cell.contentView addSubview:spm];
     }
-    cell.textLabel.font = [UIFont fontWithName:@"Proxima Nova" size:18];
-    cell.textLabel.textColor = [UIColor whiteColor];
     cell.backgroundColor = [UIColor clearColor];
 
     return cell;
@@ -175,6 +214,8 @@
 {
     if(indexPath.section == 1){
         return 70;
+    } else if(indexPath.section == 0 && indexPath.row == 0){
+        return 100;
     } else {
         return -1;
     }
@@ -183,9 +224,9 @@
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0 && indexPath.row == 2){
+    if(indexPath.section == 0 && indexPath.row == 1){
         [self playPause:nil];
-    } else if(indexPath.section == 0 && indexPath.row == 1){
+    } else if(indexPath.section == 0 && indexPath.row == 0){
         self.spm = self.spm + 1;
         self.playlist.spm = self.spm;
         

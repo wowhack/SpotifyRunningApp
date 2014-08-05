@@ -49,10 +49,6 @@
         self.session = session;
         
         [self.tableView reloadData];
-        
-        for(SPTPlaylistSnapshot *playlist in playlists.items){
-            NSLog(@"name: %@", playlist.name);
-        }
     }];
 }
 
@@ -76,7 +72,12 @@
     cell.textLabel.font = [UIFont fontWithName:@"Proxima Nova" size:18];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.backgroundColor = [UIColor clearColor];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
+    UIView * selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
+    [selectedBackgroundView setBackgroundColor:[UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1]];
+    [cell setSelectedBackgroundView:selectedBackgroundView];
+    
     return cell;
 }
 
@@ -93,7 +94,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     PlayViewController *playView = [[PlayViewController alloc] init];
     [playView handlePlaylist:playlist session:self.session];
     
-    [self.navigationController pushViewController:playView animated:YES];
+    [self presentViewController:playView animated:YES completion:nil];
 }
 
 
