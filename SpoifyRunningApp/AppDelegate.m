@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <Spotify/Spotify.h>
 #import "PlaylistViewController.h"
+#import <Crashlytics/Crashlytics.h>
 
 static NSString * const kClientId = @"2aa6cecedab74a91b389b395d14cbc6b";
 static NSString * const kCallbackURL = @"blablabla://callback";
@@ -36,6 +37,8 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Crashlytics startWithAPIKey:@"c1e380ab265981784bfff0cd28c9e67396ae1df8"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     [[UINavigationBar appearance] setTitleTextAttributes: @{

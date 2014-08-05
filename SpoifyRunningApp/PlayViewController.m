@@ -232,7 +232,7 @@
         if(spm < 80 && self.running){
             [self bieberAlert:YES];
             self.running = NO;
-        } else if(self.lastTrackChange.timeIntervalSinceNow <= -10 && !self.bieberMode){
+        } else if(self.lastTrackChange.timeIntervalSinceNow <= -10 || (self.bieberMode && spm > 100)){
             Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
             if(![self.currentTrack.uri isEqual:firstTrack.uri]){
                 self.currentTrack = firstTrack;
@@ -245,7 +245,6 @@
             [self.tableView reloadData];
         }
     }];
-
 }
 
 - (void)bieberAlert:(BOOL)show
@@ -255,10 +254,12 @@
         [self.tableView addSubview:bieberView];
         [self.tableView bringSubviewToFront:bieberView];
         [self playTrack:self.bieberTrack];
+        self.bieberMode = YES;
         self.bieberView = bieberView;
     } else if(self.bieberView){
         [self.bieberView removeFromSuperview];
         self.bieberView = nil;
+        self.bieberMode = NO;
     }
 }
 

@@ -28,6 +28,7 @@
 		503043CE199112F400E538A2 /* ProximaNova-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 503043C3199112B700E538A2 /* ProximaNova-Semibold.otf */; };
 		503043CF199112F400E538A2 /* ProximaNova-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 503043C4199112B700E538A2 /* ProximaNova-SemiboldItalic.otf */; };
 		503043D2199124E100E538A2 /* MovementThing.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043D1199124E100E538A2 /* MovementThing.m */; };
+		5065F28219916FB700392568 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5065F28119916FB700392568 /* Crashlytics.framework */; };
 		50F0A08919915711002DABFC /* BieberAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F0A08819915711002DABFC /* BieberAlertView.m */; };
 		6AD5DB184D014535864D9E18 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B54C27F559443DCA67DFA19 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -75,6 +76,7 @@
 		503043C4199112B700E538A2 /* ProximaNova-SemiboldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-SemiboldItalic.otf"; sourceTree = "<group>"; };
 		503043D0199124E100E538A2 /* MovementThing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovementThing.h; sourceTree = "<group>"; };
 		503043D1199124E100E538A2 /* MovementThing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovementThing.m; sourceTree = "<group>"; };
+		5065F28119916FB700392568 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		50F0A08719915711002DABFC /* BieberAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BieberAlertView.h; path = ../BieberAlertView.h; sourceTree = "<group>"; };
 		50F0A08819915711002DABFC /* BieberAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BieberAlertView.m; path = ../BieberAlertView.m; sourceTree = "<group>"; };
 		9B54C27F559443DCA67DFA19 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,6 +89,7 @@
 			files = (
 				5022C04B1990CDDA00648375 /* AVFoundation.framework in Frameworks */,
 				5022C0491990CDCE00648375 /* Spotify.framework in Frameworks */,
+				5065F28219916FB700392568 /* Crashlytics.framework in Frameworks */,
 				6AD5DB184D014535864D9E18 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +107,7 @@
 		5022C0191990CD9600648375 = {
 			isa = PBXGroup;
 			children = (
+				5065F28119916FB700392568 /* Crashlytics.framework */,
 				503043B9199112A500E538A2 /* Fonts */,
 				5022C04A1990CDDA00648375 /* AVFoundation.framework */,
 				5022C0481990CDCE00648375 /* Spotify.framework */,
@@ -210,6 +214,7 @@
 				5022C01F1990CD9600648375 /* Frameworks */,
 				5022C0201990CD9600648375 /* Resources */,
 				46B1AA4A61E24B52A3B23963 /* Copy Pods Resources */,
+				5065F28019916F6500392568 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -320,6 +325,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		5065F28019916F6500392568 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run c1e380ab265981784bfff0cd28c9e67396ae1df8 15bdd7aa2794ffb8bcb1f8de0592b023aabc7a1e98d8e187f548e7896aad8639";
 		};
 		5EFD3B8520A841DB90E79BCD /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -459,6 +477,7 @@
 					"$(inherited)",
 					"/Users/albert/Downloads/ios-sdk-beta-3",
 					2,
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = SpoifyRunningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -480,6 +499,7 @@
 					"$(inherited)",
 					"/Users/albert/Downloads/ios-sdk-beta-3",
 					2,
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = SpoifyRunningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
