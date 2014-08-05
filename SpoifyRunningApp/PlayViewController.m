@@ -79,6 +79,7 @@
         
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         id playlistData = [userDefaults objectForKey:[playlist.uri absoluteString]];
+        
         self.playlist = playlistData ? [NSKeyedUnarchiver unarchiveObjectWithData:playlistData] : nil;
         
         if(!self.playlist){
@@ -111,6 +112,8 @@
                     
                     NSNumber *trackSpm = [userDefaults objectForKey:[sptTrack.uri absoluteString]];
                     if(!trackSpm){
+                        
+                        NSLog(@"no spm: %@", sptTrack.name);
                         ready = NO;
                         NSString *url = [NSString stringWithFormat:@"http://developer.echonest.com/api/v4/song/profile?api_key=6HADM8BJ9XUXBMB3M&track_id=%@&bucket=id:spotify&bucket=audio_summary", sptTrack.uri];
                         
@@ -152,13 +155,12 @@
                 [self.tableView reloadData];
             }];
         } else {
-            
             Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
             self.currentTrack = firstTrack;
             
             [self.tableView reloadData];
         }
-       
+        
     }];
 
 }
@@ -176,7 +178,9 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSLog(@"pause isPlaying: %d", self.streamingPlayer.isPlaying);
                 [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
                 [_movementThing stop];
+                self.running = NO;
             });
         }];
         
@@ -194,6 +198,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSLog(@"play isPlaying: %d", self.streamingPlayer.isPlaying);
                 [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
             });
             
         }];
@@ -233,16 +238,19 @@
         if(spm < 80 && self.running){
             [self bieberAlert:YES];
             self.running = NO;
-        } else if(self.lastTrackChange.timeIntervalSinceNow <= -5 || (self.bieberMode && spm > 100)){
+        } else if(self.lastTrackChange.timeIntervalSinceNow <= -5 || (self.bieberMode && spm > 95)){
             Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
             if(![self.currentTrack.uri isEqual:firstTrack.uri]){
                 self.currentTrack = firstTrack;
                 [self playTrack:firstTrack];
             }
+
             if(spm > 100){
                 self.running = YES;
-                [self bieberAlert:NO];
             }
+
+            [self bieberAlert:NO];
+
             [self.tableView reloadData];
         }
     }];
@@ -250,14 +258,14 @@
 
 - (void)bieberAlert:(BOOL)show
 {
-    if(show && !self.bieberView){
+    if(show && !self.bieberMode){
         UIView *bieberView = [[BieberAlertView alloc] initWithFrame:self.view.bounds];
         [self.tableView addSubview:bieberView];
         [self.tableView bringSubviewToFront:bieberView];
         [self playTrack:self.bieberTrack];
         self.bieberMode = YES;
         self.bieberView = bieberView;
-    } else if(self.bieberView){
+    } else if(self.bieberMode){
         [self.bieberView removeFromSuperview];
         self.bieberView = nil;
         self.bieberMode = NO;
@@ -325,7 +333,7 @@
         
         int extra = 0;
         
-        if(indexPath.row == 0){
+        if(indexPath.row == 0 && self.streamingPlayer.isPlaying){
             PlayView *play = [[PlayView alloc] initWithFrame:CGRectMake(15, 15, 10, 30)];
             play.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:play];
@@ -337,7 +345,7 @@
         title.text = track.title;
         title.font = [UIFont fontWithName:@"Proxima Nova" size:18];
         
-        if(indexPath.row == 0){
+        if(indexPath.row == 0 && self.streamingPlayer.isPlaying){
             title.textColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
         } else {
             title.textColor = [UIColor whiteColor];

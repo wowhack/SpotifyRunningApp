@@ -90,8 +90,7 @@ dispatch_queue_t _serialQ;
     
     if(self.on){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-            //[self sendSpm];
+            [self sendSpm];
         });
     }
 }
