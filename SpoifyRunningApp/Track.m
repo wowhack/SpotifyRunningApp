@@ -36,7 +36,7 @@
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:5al9is1AQnaI3lTi20DUG6"]){
         return 11;
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:6Ou08NE0N5z8eRL1siDtAK"]){
-        return 20;
+        return 25.5; //
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:3AVZaAbDvR6rs2NN4n0aAF"]){
         return 8;
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:1aXpAbAo5rLbAQy2FRhoSI"]){
@@ -52,9 +52,11 @@
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:3AszgPDZd9q0DpDFt4HFBy"]){
         return 2;
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:6bUNEbXT7HovLW6BgPCBsb"]){
-        return 18;
+        return 17.8;
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:6cS2reOYomC1kVSeNR9Isp"]){
         return 7;
+    } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:1iXBApi39l5r6lJj9WEXXS"]){ // Hideaway
+        return 63;
     } else {
         return 0;
     }

@@ -288,12 +288,12 @@
         artistLabel.text = track.artist;
         
         artistLabel.font = [UIFont fontWithName:@"Proxima Nova" size:16];
-        artistLabel.textColor = [UIColor grayColor];
+        artistLabel.textColor = [UIColor lightGrayColor];
         
         UILabel *spm = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.tableView.bounds) - 40, 5, 50, 30)];
         spm.text = [NSString stringWithFormat:@"%d", track.spm];
         spm.font = [UIFont fontWithName:@"Proxima Nova" size:16];
-        spm.textColor = [UIColor grayColor];
+        spm.textColor = [UIColor lightGrayColor];
         
         [cell.contentView addSubview:title];
         [cell.contentView addSubview:artistLabel];
@@ -324,37 +324,35 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         [self playPause:nil];
     } else if(indexPath.section == 0 && indexPath.row == 0){
         
-
+        if(self.spm == 0){
+            self.spm = 80;
+        }
         [self changeSpm:self.spm + 1];
         NSLog(@"spm click: %d", self.spm);
+    } else if(indexPath.section == 1){
+        Track *track = [self.playlist.tracks objectAtIndex:indexPath.row];
         
-        
-        /*
-        Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-        if(![self.currentTrack.uri isEqual:firstTrack.uri]){
-            self.currentTrack = firstTrack;
-            [self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
-
-                if (error != nil) {
-                    NSLog(@"*** Enabling playback got error: %@", error);
-                    return;
-                }
-                
-                if(self.currentTrack.offset > 0){
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [self.streamingPlayer seekToOffset:self.currentTrack.offset callback:^(NSError *error) {
-                            if (error) {
-                                NSLog(@"*** Enabling playback got error: %@", error);
-                                return;
-                            }
-                        }];
-                    });
-                }
-            }];
-        }
-        
-        [self.tableView reloadData];*/
+        [self.streamingPlayer playURI:track.uri callback:^(NSError *error) {
+            if (error != nil) {
+                NSLog(@"*** Enabling playback got error: %@", error);
+                return;
+            }
+            
+            if(track.offset > 0){
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.streamingPlayer seekToOffset:track.offset callback:^(NSError *error) {
+                        if (error) {
+                            NSLog(@"*** Enabling playback got error: %@", error);
+                            return;
+                        }
+                    }];
+                });
+            }
+            
+            self.lastTrackChange = [NSDate date];
+        }];
     }
+
 }
 
 #pragma mark - Audio delegate
