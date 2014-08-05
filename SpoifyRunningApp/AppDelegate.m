@@ -20,6 +20,8 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
 
 @interface AppDelegate ()
 
+@property PlaylistViewController *playlistViewCtrl;
+
 @end
 
 @implementation AppDelegate
@@ -29,16 +31,23 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:sessionData forKey:kSessionUserDefaultsKey];
     [userDefaults synchronize];
-    PlaylistViewController *viewController = (PlaylistViewController *)self.window.rootViewController;
-    [viewController handleNewSession:session];
+    [self.playlistViewCtrl handleNewSession:session];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[PlaylistViewController alloc] init];
+    
+    [[UINavigationBar appearance] setTitleTextAttributes: @{
+                                                            NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                            NSFontAttributeName: [UIFont fontWithName:@"Proxima Nova" size:18]
+                                                            }];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    
+    self.playlistViewCtrl = [[PlaylistViewController alloc] init];
+    UINavigationController *navView = [[UINavigationController alloc] initWithRootViewController:self.playlistViewCtrl];
+    self.window.rootViewController = navView;
     [self.window makeKeyAndVisible];
     NSLog(@"application1");
     id sessionData = [[NSUserDefaults standardUserDefaults] objectForKey:kSessionUserDefaultsKey];

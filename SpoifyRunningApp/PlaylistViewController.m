@@ -22,7 +22,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    self.view.backgroundColor = [UIColor blackColor];
+    
+    self.title = @"Select playlist";
+    
+    self.tableView.separatorColor = [UIColor darkGrayColor];
+    self.navigationController.view.backgroundColor = [UIColor blackColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
+    //    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+
 }
 
 -(void)handleNewSession:(SPTSession *)session {
@@ -64,7 +73,10 @@
     
     UITableViewCell *cell = [[UITableViewCell alloc] init];
     cell.textLabel.text = playlist.name;
-    
+    cell.textLabel.font = [UIFont fontWithName:@"Proxima Nova" size:18];
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.backgroundColor = [UIColor clearColor];
+
     return cell;
 }
 
@@ -81,7 +93,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     PlayViewController *playView = [[PlayViewController alloc] init];
     [playView handlePlaylist:playlist session:self.session];
     
-    [self presentViewController:playView animated:YES completion:nil];
+    [self.navigationController pushViewController:playView animated:YES];
 }
 
 

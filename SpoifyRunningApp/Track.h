@@ -12,7 +12,7 @@
 @interface Track : NSObject
 
 @property (nonatomic) SPTTrack *track;
-@property (nonatomic) double spm;
+@property (nonatomic) int spm;
 @property (nonatomic) NSTimeInterval offset;
 
 @end

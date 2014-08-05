@@ -15,9 +15,7 @@
 
 @interface PlayViewController()
 
-//@property (nonatomic, strong) SPTTrackPlayer *trackPlayer;
 @property (nonatomic, strong) SPTAudioStreamingController *streamingPlayer;
-//@property (nonatomic, strong) SPTPlaylistSnapshot *playlist;
 @property (nonatomic, strong) Playlist *playlist;
 @property (nonatomic) int spm;
 @property (nonatomic) Track *currentTrack;
@@ -28,6 +26,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor blackColor];
+    self.tableView.separatorColor = [UIColor darkGrayColor];
+
     _spm = 100;
 }
 
@@ -50,6 +51,8 @@
         [SPTPlaylistSnapshot playlistWithURI:playlist.uri session:session callback:^(NSError *error, id object) {
             SPTPlaylistSnapshot *playlistSnapshot = (SPTPlaylistSnapshot*)object;
             self.playlist = [[Playlist alloc] init];
+            self.playlist.name = playlistSnapshot.name;
+            self.title = self.playlist.name;
             
             NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
             
@@ -74,7 +77,7 @@
                             NSLog(@"title: %@, tempo: %@", sptTrack.name, tempo);
                             
                             [userDefaults setObject:tempo forKey:[sptTrack.uri absoluteString]];
-                            track.spm = [tempo doubleValue];
+                            track.spm = [tempo intValue];
                             [self.playlist addTrack:track];
                         }
                         
@@ -83,11 +86,12 @@
                     }];
                 } else {
                     NSLog(@"title: %@, spm: %@", sptTrack.name, trackSpm);
-                    track.spm = [trackSpm doubleValue];
+                    track.spm = [trackSpm intValue];
                     [self.playlist addTrack:track];
                 }
             }
             
+            NSLog(@"count: %ld", (unsigned long)[self.playlist.tracks count]);
             Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
             self.currentTrack = firstTrack;
             
@@ -130,6 +134,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [[UITableViewCell alloc] init];
+    
+    
     if(indexPath.section == 0 && indexPath.row == 0){
        cell.textLabel.text = self.currentTrack.track.name;
     } else if(indexPath.section == 0 && indexPath.row == 1){
@@ -139,15 +145,39 @@
 //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else {
         Track *track = [self.playlist.tracks objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@: %f", track.track.name, track.spm];
+        
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(15, 5, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+        title.text = track.track.name;
+        
+        UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 35, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+        
+        if( [track.track.artists count] > 0){
+            SPTPartialArtist *artist = (SPTPartialArtist*)track.track.artists.firstObject;
+            artistLabel.text = artist.name;
+        }
+        
+        
+        UILabel *spm = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.tableView.bounds) - 40, 10, 50, 30)];
+        spm.text = [NSString stringWithFormat:@"%d", track.spm];
+        
+        [cell.contentView addSubview:title];
+        [cell.contentView addSubview:artistLabel];
+        [cell.contentView addSubview:spm];
     }
-    
+    cell.textLabel.font = [UIFont fontWithName:@"Proxima Nova" size:18];
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.backgroundColor = [UIColor clearColor];
+
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return -1;
+    if(indexPath.section == 1){
+        return 70;
+    } else {
+        return -1;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView

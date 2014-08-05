@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpoifyRunningApp/PlaylistViewController.m"
-            timestampString = "428929612.353333"
+            timestampString = "428938384.780639"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
             landmarkName = "-handleNewSession:"
             landmarkType = "5">
          </BreakpointContent>

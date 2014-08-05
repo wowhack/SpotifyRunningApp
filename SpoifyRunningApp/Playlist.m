@@ -35,8 +35,8 @@
 
 - (NSArray*)tracks{
     NSArray *sortedArray = [_unorderedTracks sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        double first = abs([(Track*)a spm] - _spm);
-        double second = abs([(Track*)b spm] - _spm);
+        int first = abs([(Track*)a spm] - _spm);
+        int second = abs([(Track*)b spm] - _spm);
         return first > second;
     }];
 
