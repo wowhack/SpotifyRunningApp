@@ -14,6 +14,11 @@
 		5022C0491990CDCE00648375 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C0481990CDCE00648375 /* Spotify.framework */; };
 		5022C04B1990CDDA00648375 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C04A1990CDDA00648375 /* AVFoundation.framework */; };
 		5022C04F1990D49B00648375 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C04E1990D49B00648375 /* PlayViewController.m */; };
+		503043B11990E77F00E538A2 /* NowPlayingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043AF1990E77F00E538A2 /* NowPlayingTableViewCell.m */; };
+		503043B21990E77F00E538A2 /* NowPlayingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 503043B01990E77F00E538A2 /* NowPlayingTableViewCell.xib */; };
+		503043B51990EF0700E538A2 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043B41990EF0700E538A2 /* Track.m */; };
+		503043B81990F05900E538A2 /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043B71990F05900E538A2 /* Playlist.m */; };
+		6AD5DB184D014535864D9E18 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B54C27F559443DCA67DFA19 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C248098672F4E10BA8660D0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		5022C0221990CD9600648375 /* SpotifyRunningApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotifyRunningApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5022C0261990CD9600648375 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5022C0271990CD9600648375 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -41,6 +47,14 @@
 		5022C04A1990CDDA00648375 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5022C04D1990D49B00648375 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		5022C04E1990D49B00648375 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
+		503043AE1990E77F00E538A2 /* NowPlayingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NowPlayingTableViewCell.h; sourceTree = "<group>"; };
+		503043AF1990E77F00E538A2 /* NowPlayingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NowPlayingTableViewCell.m; sourceTree = "<group>"; };
+		503043B01990E77F00E538A2 /* NowPlayingTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NowPlayingTableViewCell.xib; sourceTree = "<group>"; };
+		503043B31990EF0700E538A2 /* Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track.h; sourceTree = "<group>"; };
+		503043B41990EF0700E538A2 /* Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track.m; sourceTree = "<group>"; };
+		503043B61990F05900E538A2 /* Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
+		503043B71990F05900E538A2 /* Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playlist.m; sourceTree = "<group>"; };
+		9B54C27F559443DCA67DFA19 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +64,7 @@
 			files = (
 				5022C04B1990CDDA00648375 /* AVFoundation.framework in Frameworks */,
 				5022C0491990CDCE00648375 /* Spotify.framework in Frameworks */,
+				6AD5DB184D014535864D9E18 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +86,8 @@
 				5022C0241990CD9600648375 /* SpoifyRunningApp */,
 				5022C03B1990CD9600648375 /* SpoifyRunningAppTests */,
 				5022C0231990CD9600648375 /* Products */,
+				3C248098672F4E10BA8660D0 /* Pods.xcconfig */,
+				923EFCEB265D4491A8FBFE27 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,6 +111,13 @@
 				5022C0251990CD9600648375 /* Supporting Files */,
 				5022C04D1990D49B00648375 /* PlayViewController.h */,
 				5022C04E1990D49B00648375 /* PlayViewController.m */,
+				503043AE1990E77F00E538A2 /* NowPlayingTableViewCell.h */,
+				503043AF1990E77F00E538A2 /* NowPlayingTableViewCell.m */,
+				503043B01990E77F00E538A2 /* NowPlayingTableViewCell.xib */,
+				503043B31990EF0700E538A2 /* Track.h */,
+				503043B41990EF0700E538A2 /* Track.m */,
+				503043B61990F05900E538A2 /* Playlist.h */,
+				503043B71990F05900E538A2 /* Playlist.m */,
 			);
 			path = SpoifyRunningApp;
 			sourceTree = "<group>";
@@ -123,6 +147,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		923EFCEB265D4491A8FBFE27 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9B54C27F559443DCA67DFA19 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -130,9 +162,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5022C0421990CD9600648375 /* Build configuration list for PBXNativeTarget "SpotifyRunningApp" */;
 			buildPhases = (
+				5EFD3B8520A841DB90E79BCD /* Check Pods Manifest.lock */,
 				5022C01E1990CD9600648375 /* Sources */,
 				5022C01F1990CD9600648375 /* Frameworks */,
 				5022C0201990CD9600648375 /* Resources */,
+				46B1AA4A61E24B52A3B23963 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -205,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5022C0331990CD9600648375 /* Images.xcassets in Resources */,
+				503043B21990E77F00E538A2 /* NowPlayingTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,13 +252,49 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		46B1AA4A61E24B52A3B23963 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5EFD3B8520A841DB90E79BCD /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5022C01E1990CD9600648375 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				503043B11990E77F00E538A2 /* NowPlayingTableViewCell.m in Sources */,
 				5022C04F1990D49B00648375 /* PlayViewController.m in Sources */,
+				503043B81990F05900E538A2 /* Playlist.m in Sources */,
 				5022C02E1990CD9600648375 /* PlaylistViewController.m in Sources */,
+				503043B51990EF0700E538A2 /* Track.m in Sources */,
 				5022C02B1990CD9600648375 /* AppDelegate.m in Sources */,
 				5022C0281990CD9600648375 /* main.m in Sources */,
 			);
@@ -325,6 +396,7 @@
 		};
 		5022C0431990CD9600648375 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C248098672F4E10BA8660D0 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -345,6 +417,7 @@
 		};
 		5022C0441990CD9600648375 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C248098672F4E10BA8660D0 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;

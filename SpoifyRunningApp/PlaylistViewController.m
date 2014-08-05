@@ -20,9 +20,6 @@
 
 @implementation PlaylistViewController
 
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
@@ -36,7 +33,7 @@
             NSLog(@"*** Playlist lookup got error %@", error);
             return;
         }
-        NSLog(@"hej: %@", object);
+        
         SPTPlaylistList *playlists = (SPTPlaylistList*)object;
         
         self.playlists = playlists.items;
@@ -48,7 +45,6 @@
             NSLog(@"name: %@", playlist.name);
         }
     }];
-    
 }
 
 
@@ -71,7 +67,6 @@
     
     return cell;
 }
-
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

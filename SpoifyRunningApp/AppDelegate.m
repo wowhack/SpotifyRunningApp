@@ -25,7 +25,6 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
 @implementation AppDelegate
 
 -(void)enableAudioPlaybackWithSession:(SPTSession *)session {
-    NSLog(@"enableAudioPlaybackWithSession");
     NSData *sessionData = [NSKeyedArchiver archivedDataWithRootObject:session];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:sessionData forKey:kSessionUserDefaultsKey];

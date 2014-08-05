@@ -11,7 +11,7 @@
 
 @class SPTSession;
 
-@interface PlayViewController : UITableViewController<SPTTrackPlayerDelegate>
+@interface PlayViewController : UITableViewController<SPTAudioStreamingDelegate>
 
 -(void)handlePlaylist:(SPTPlaylistSnapshot*)playlist session:(SPTSession *)session ;
 
