@@ -10,29 +10,29 @@
 	<string>SpotifyRunningApp</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>05B5EC47-FC87-42A6-AA66-E42C11DCCFA9</key>
+		<key>DDA4D9D60354E9C04FF39756CF27FE8423E88278</key>
 		<string>ssh://github.com/wowhack/SpotifyRunningApp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>SpotifyRunningApp.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>05B5EC47-FC87-42A6-AA66-E42C11DCCFA9</key>
+		<key>DDA4D9D60354E9C04FF39756CF27FE8423E88278</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/wowhack/SpotifyRunningApp.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>05B5EC47-FC87-42A6-AA66-E42C11DCCFA9</string>
+	<string>DDA4D9D60354E9C04FF39756CF27FE8423E88278</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>05B5EC47-FC87-42A6-AA66-E42C11DCCFA9</string>
+			<string>DDA4D9D60354E9C04FF39756CF27FE8423E88278</string>
 			<key>IDESourceControlWCCName</key>
 			<string>SpoifyRunningApp</string>
 		</dict>

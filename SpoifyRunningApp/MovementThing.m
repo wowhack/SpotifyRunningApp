@@ -22,6 +22,7 @@ const double kSeconds = 20.0;
 @property (nonatomic) ArmDirection armDirection;
 @property (nonatomic) double lastZ;
 @property (nonatomic) long spm;
+@property (nonatomic) NSDate *lastUpdate;
 
 @end
 
@@ -51,14 +52,14 @@ dispatch_queue_t _serialQ;
         
         if(self.lastZ && (!self.armDirection || self.armDirection == kForward) && self.lastZ < rotation.z-1.5){
             self.armDirection = kBackward;
-            NSLog(@"backward z: %f", rotation.z);
-            [self setSpm:YES];
+//            NSLog(@"backward z: %f", rotation.z);
+            [self updateSpm:YES];
         } else if(self.lastZ && (!self.armDirection || self.armDirection == kBackward) && self.lastZ > rotation.z+1.5){
             self.armDirection = kForward;
-            NSLog(@"forward z: %f", rotation.z);
-            [self setSpm:YES];
+//            NSLog(@"forward z: %f", rotation.z);
+            [self updateSpm:YES];
         } else {
-            [self setSpm:NO];
+            [self updateSpm:NO];
         }
         
         self.lastZ = rotation.z;
@@ -67,7 +68,7 @@ dispatch_queue_t _serialQ;
     [_motionManager startGyroUpdatesToQueue:opQueue withHandler:gyroHandler];
 }
 
-- (void)setSpm:(BOOL)addStep {
+- (void)updateSpm:(BOOL)addStep {
     
     dispatch_sync(_serialQ, ^{
         
@@ -83,9 +84,11 @@ dispatch_queue_t _serialQ;
         }
         
         long spm = filteredSteps.count * 3;
-        if(_spm != spm){
+        if((!self.lastUpdate || self.lastUpdate.timeIntervalSinceNow < -1) && abs(_spm-spm) > 5){
+            NSLog(@"spm: %ld", spm);
             _spm = spm;
             [self.delegate changeSpm:(int)spm];
+            self.lastUpdate = [NSDate date];
         }
         
         /*
@@ -95,9 +98,7 @@ dispatch_queue_t _serialQ;
          self.tableView.reloadData()
          }*/
         
-        
-        
-        NSLog(@"steps per minute: %ld", spm);
+//        NSLog(@"steps per minute: %ld", spm);
     });
 }
 

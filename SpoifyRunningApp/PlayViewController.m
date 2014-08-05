@@ -24,6 +24,10 @@
 
 @property (nonatomic) MovementThing *movementThing;
 
+@property (nonatomic) NSDate *lastTrackChange;
+
+@property (nonatomic) UILabel *spmLabel;
+
 @end
 
 @implementation PlayViewController
@@ -33,10 +37,17 @@
     self.view.backgroundColor = [UIColor blackColor];
     self.tableView.separatorColor = [UIColor darkGrayColor];
 
-    _spm = 100;
+    _spm = 0;
     
     _movementThing = [[MovementThing alloc] init];
     _movementThing.delegate = self;
+    
+    UILabel *spm =  [[UILabel alloc] initWithFrame:CGRectMake(0, 50, CGRectGetWidth(self.tableView.bounds), 60)];
+    spm.textAlignment = NSTextAlignmentCenter;
+    spm.text = [NSString stringWithFormat:@"%d", _spm];
+    spm.font = [UIFont fontWithName:@"ProximaNova-Light" size:60];
+    spm.textColor = [UIColor whiteColor];
+    self.spmLabel = spm;
 }
 
 -(void)handlePlaylist:(SPTPlaylistSnapshot*)playlist session:(SPTSession *)session {
@@ -122,18 +133,33 @@
                 [self.tableView reloadData];
             }];
         } else {
+            
+            Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
+            self.currentTrack = firstTrack;
+            
             [self.tableView reloadData];
         }
        
     }];
 
-
 }
 
 -(void)playPause:(id)sender {
+    NSLog(@"playPause isPlaying: %d", self.streamingPlayer.isPlaying);
 	if (self.streamingPlayer.isPlaying) {
         
-        //
+        [self.streamingPlayer setIsPlaying:NO callback:^(NSError *error) {
+            if (error != nil) {
+                NSLog(@"*** Stop audio, got error: %@", error);
+                return;
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                NSLog(@"pause isPlaying: %d", self.streamingPlayer.isPlaying);
+                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            });
+        }];
+        
 	} else {
 		[self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
             if (error != nil) {
@@ -142,40 +168,52 @@
             }
             
             [_movementThing start];
+            
+            self.lastTrackChange = [NSDate date];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                NSLog(@"play isPlaying: %d", self.streamingPlayer.isPlaying);
+                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            });
+            
         }];
 	}
 }
 
 -(void)changeSpm:(int)spm
 {
-    _spm = spm;
-    
-    self.playlist.spm = self.spm;
-    
-    Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-    if(![self.currentTrack.uri isEqual:firstTrack.uri]){
-        self.currentTrack = firstTrack;
-        [self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
-            
-            if (error != nil) {
-                NSLog(@"*** Enabling playback got error: %@", error);
-                return;
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        _spm = spm;
+        self.playlist.spm = spm;
+        self.spmLabel.text = [NSString stringWithFormat:@"%d", spm];
+
+        if(self.lastTrackChange.timeIntervalSinceNow <= -10){
+            Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
+            if(![self.currentTrack.uri isEqual:firstTrack.uri]){
+                self.currentTrack = firstTrack;
+                [self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
+                    
+                    if (error != nil) {
+                        NSLog(@"*** Enabling playback got error: %@", error);
+                        return;
+                    }
+                    
+                    if(self.currentTrack.offset > 0){
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [self.streamingPlayer seekToOffset:self.currentTrack.offset callback:^(NSError *error) {
+                                if (error) {
+                                    NSLog(@"*** Enabling playback got error: %@", error);
+                                    return;
+                                }
+                            }];
+                        });
+                    }
+                }];
+                self.lastTrackChange = [NSDate date];
             }
-            
-            if(self.currentTrack.offset > 0){
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.streamingPlayer seekToOffset:self.currentTrack.offset callback:^(NSError *error) {
-                        if (error) {
-                            NSLog(@"*** Enabling playback got error: %@", error);
-                            return;
-                        }
-                    }];
-                });
-            }
-        }];
-    }
-    
-    [self.tableView reloadData];
+            [self.tableView reloadData];
+        }
+    }];
 
 }
 
@@ -206,14 +244,10 @@
         header.font = [UIFont fontWithName:@"Proxima Nova" size:20];
         header.textColor = [UIColor lightGrayColor];
         
-        UILabel *spm =  [[UILabel alloc] initWithFrame:CGRectMake(0, 50, CGRectGetWidth(self.tableView.bounds), 60)];
-        spm.textAlignment = NSTextAlignmentCenter;
-        spm.text = [NSString stringWithFormat:@"%d", _spm];
-        spm.font = [UIFont fontWithName:@"ProximaNova-Light" size:60];
-        spm.textColor = [UIColor whiteColor];
-        
+        self.spmLabel.text = [NSString stringWithFormat:@"%d", _spm];
+
         [cell.contentView addSubview:header];
-        [cell.contentView addSubview:spm];
+        [cell.contentView addSubview:self.spmLabel];
 
         cell.separatorInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, cell.bounds.size.width);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -225,7 +259,13 @@
         play.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:20];
         play.titleLabel.textColor = [UIColor whiteColor];
         [cell.contentView addSubview:play];
-        [play setTitle:@"Play" forState:UIControlStateNormal];
+        
+        if(self.streamingPlayer.isPlaying){
+            [play setTitle:@"Pause" forState:UIControlStateNormal];
+        } else {
+            [play setTitle:@"Play" forState:UIControlStateNormal];
+        }
+
         [play addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -247,7 +287,6 @@
         UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
         artistLabel.text = track.artist;
         
-
         artistLabel.font = [UIFont fontWithName:@"Proxima Nova" size:16];
         artistLabel.textColor = [UIColor grayColor];
         
@@ -259,6 +298,8 @@
         [cell.contentView addSubview:title];
         [cell.contentView addSubview:artistLabel];
         [cell.contentView addSubview:spm];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     cell.backgroundColor = [UIColor clearColor];
 
@@ -282,9 +323,13 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     if(indexPath.section == 0 && indexPath.row == 1){
         [self playPause:nil];
     } else if(indexPath.section == 0 && indexPath.row == 0){
-        self.spm = self.spm + 1;
-        self.playlist.spm = self.spm;
         
+
+        [self changeSpm:self.spm + 1];
+        NSLog(@"spm click: %d", self.spm);
+        
+        
+        /*
         Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
         if(![self.currentTrack.uri isEqual:firstTrack.uri]){
             self.currentTrack = firstTrack;
@@ -308,7 +353,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             }];
         }
         
-        [self.tableView reloadData];
+        [self.tableView reloadData];*/
     }
 }
 

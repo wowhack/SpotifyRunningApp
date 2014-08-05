@@ -14,8 +14,6 @@
 		5022C0491990CDCE00648375 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C0481990CDCE00648375 /* Spotify.framework */; };
 		5022C04B1990CDDA00648375 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C04A1990CDDA00648375 /* AVFoundation.framework */; };
 		5022C04F1990D49B00648375 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C04E1990D49B00648375 /* PlayViewController.m */; };
-		503043B11990E77F00E538A2 /* NowPlayingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043AF1990E77F00E538A2 /* NowPlayingTableViewCell.m */; };
-		503043B21990E77F00E538A2 /* NowPlayingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 503043B01990E77F00E538A2 /* NowPlayingTableViewCell.xib */; };
 		503043B51990EF0700E538A2 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043B41990EF0700E538A2 /* Track.m */; };
 		503043B81990F05900E538A2 /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043B71990F05900E538A2 /* Playlist.m */; };
 		503043C5199112F400E538A2 /* ProximaNova-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 503043BA199112B700E538A2 /* ProximaNova-Black.otf */; };
@@ -59,9 +57,6 @@
 		5022C04A1990CDDA00648375 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5022C04D1990D49B00648375 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		5022C04E1990D49B00648375 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
-		503043AE1990E77F00E538A2 /* NowPlayingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NowPlayingTableViewCell.h; sourceTree = "<group>"; };
-		503043AF1990E77F00E538A2 /* NowPlayingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NowPlayingTableViewCell.m; sourceTree = "<group>"; };
-		503043B01990E77F00E538A2 /* NowPlayingTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NowPlayingTableViewCell.xib; sourceTree = "<group>"; };
 		503043B31990EF0700E538A2 /* Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track.h; sourceTree = "<group>"; };
 		503043B41990EF0700E538A2 /* Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track.m; sourceTree = "<group>"; };
 		503043B61990F05900E538A2 /* Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
@@ -137,9 +132,6 @@
 				5022C0251990CD9600648375 /* Supporting Files */,
 				5022C04D1990D49B00648375 /* PlayViewController.h */,
 				5022C04E1990D49B00648375 /* PlayViewController.m */,
-				503043AE1990E77F00E538A2 /* NowPlayingTableViewCell.h */,
-				503043AF1990E77F00E538A2 /* NowPlayingTableViewCell.m */,
-				503043B01990E77F00E538A2 /* NowPlayingTableViewCell.xib */,
 				503043B31990EF0700E538A2 /* Track.h */,
 				503043B41990EF0700E538A2 /* Track.m */,
 				503043B61990F05900E538A2 /* Playlist.h */,
@@ -296,7 +288,6 @@
 				503043CE199112F400E538A2 /* ProximaNova-Semibold.otf in Resources */,
 				503043CF199112F400E538A2 /* ProximaNova-SemiboldItalic.otf in Resources */,
 				5022C0331990CD9600648375 /* Images.xcassets in Resources */,
-				503043B21990E77F00E538A2 /* NowPlayingTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +338,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				503043B11990E77F00E538A2 /* NowPlayingTableViewCell.m in Sources */,
 				5022C04F1990D49B00648375 /* PlayViewController.m in Sources */,
 				503043B81990F05900E538A2 /* Playlist.m in Sources */,
 				5022C02E1990CD9600648375 /* PlaylistViewController.m in Sources */,
