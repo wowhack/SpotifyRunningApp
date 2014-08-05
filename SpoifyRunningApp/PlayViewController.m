@@ -43,66 +43,77 @@
     
     // login session for streaming
     [self.streamingPlayer loginWithSession:session callback:^(NSError *error) {
-        
 		if (error != nil) {
 			NSLog(@"*** Enabling playback got error: %@", error);
 			return;
 		}
+        
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        id playlistData = [userDefaults objectForKey:[playlist.uri absoluteString]];
+        self.playlist = playlistData ? [NSKeyedUnarchiver unarchiveObjectWithData:playlistData] : nil;
 
-        [SPTPlaylistSnapshot playlistWithURI:playlist.uri session:session callback:^(NSError *error, id object) {
-            SPTPlaylistSnapshot *playlistSnapshot = (SPTPlaylistSnapshot*)object;
-            self.playlist = [[Playlist alloc] init];
-            self.playlist.name = playlistSnapshot.name;
-            self.title = self.playlist.name;
+        if(!self.playlist){
             
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            
-            AFHTTPRequestOperationManager *httpManager = [AFHTTPRequestOperationManager manager];
-            httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
-            for(SPTTrack *sptTrack in playlistSnapshot.firstTrackPage.items){
-                NSLog(@"sptTrack: %@", sptTrack.name);
-                
-                Track *track = [[Track alloc] init];
-                track.track = sptTrack;
-                
-                NSNumber *trackSpm = [userDefaults objectForKey:[sptTrack.uri absoluteString]];
-                if(!trackSpm){
-                    NSString *url = [NSString stringWithFormat:@"http://developer.echonest.com/api/v4/song/profile?api_key=6HADM8BJ9XUXBMB3M&track_id=%@&bucket=id:spotify&bucket=audio_summary", sptTrack.uri];
-                    
-                    [httpManager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        
-                        NSDictionary *response = [ ((NSDictionary*)responseObject) objectForKey:@"response"];
-                        NSArray* songs = [response objectForKey:@"songs"];
-                        for(NSDictionary *song in songs){
-                            NSDictionary *summary = [song objectForKey:@"audio_summary"];
-                            NSNumber *tempo = [summary objectForKey:@"tempo"];
-                            
-                            NSLog(@"title: %@, tempo: %@", sptTrack.name, tempo);
-                            
-                            [userDefaults setObject:tempo forKey:[sptTrack.uri absoluteString]];
-                            track.spm = [tempo intValue];
-                            [self.playlist addTrack:track];
-                        }
-                        
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        NSLog(@"Error: %@", error);
-                    }];
-                    
-                } else {
-                    NSLog(@"title: %@, spm: %@", sptTrack.name, trackSpm);
-                    track.spm = [trackSpm intValue];
-                    [self.playlist addTrack:track];
+            [SPTPlaylistSnapshot playlistWithURI:playlist.uri session:session callback:^(NSError *error, id object) {
+                if (error != nil) {
+                    NSLog(@"*** Error fetching playlist: %@", error);
+                    return;
                 }
-            }
-            
-            NSLog(@"count: %ld", (unsigned long)[self.playlist.tracks count]);
-            if([self.playlist.tracks count] > 0){
-                Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-                self.currentTrack = firstTrack;
-            }
-            
-            [self.tableView reloadData];
-        }];
+                
+                SPTPlaylistSnapshot *playlistSnapshot = (SPTPlaylistSnapshot*)object;
+                self.playlist = [[Playlist alloc] init];
+                self.playlist.name = playlistSnapshot.name;
+                self.title = self.playlist.name;
+                
+                AFHTTPRequestOperationManager *httpManager = [AFHTTPRequestOperationManager manager];
+                httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
+                for(SPTTrack *sptTrack in playlistSnapshot.firstTrackPage.items){
+                    
+                    Track *track = [[Track alloc] init];
+                    track.uri = sptTrack.uri;
+                    if( [sptTrack.artists count] > 0){
+                        SPTPartialArtist *artist = (SPTPartialArtist*)sptTrack.artists.firstObject;
+                        track.artist = artist.name;
+                    }
+                    
+                    NSNumber *trackSpm = [userDefaults objectForKey:[sptTrack.uri absoluteString]];
+                    if(!trackSpm){
+                        NSString *url = [NSString stringWithFormat:@"http://developer.echonest.com/api/v4/song/profile?api_key=6HADM8BJ9XUXBMB3M&track_id=%@&bucket=id:spotify&bucket=audio_summary", sptTrack.uri];
+                        
+                        [httpManager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                            
+                            NSDictionary *response = [ ((NSDictionary*)responseObject) objectForKey:@"response"];
+                            NSArray* songs = [response objectForKey:@"songs"];
+                            for(NSDictionary *song in songs){
+                                NSDictionary *summary = [song objectForKey:@"audio_summary"];
+                                NSNumber *tempo = [summary objectForKey:@"tempo"];
+                                
+                                [userDefaults setObject:tempo forKey:[sptTrack.uri absoluteString]];
+                                track.spm = [tempo intValue];
+                                [self.playlist addTrack:track];
+                            }
+                            
+                        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                            NSLog(@"Error: %@", error);
+                        }];
+                        
+                    } else {
+                        track.spm = [trackSpm intValue];
+                        [self.playlist addTrack:track];
+                    }
+                }
+                
+                NSLog(@"count: %ld", (unsigned long)[self.playlist.tracks count]);
+                if([self.playlist.tracks count] > 0){
+                    NSData *playlistData = [NSKeyedArchiver archivedDataWithRootObject:self.playlist];
+                    [userDefaults setObject:playlistData forKey:[playlist.uri absoluteString]];
+                    Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
+                    self.currentTrack = firstTrack;
+                }
+                
+                [self.tableView reloadData];
+            }];
+        }
     }];
 }
 
@@ -111,7 +122,7 @@
         
         //
 	} else {
-		[self.streamingPlayer playURI:self.currentTrack.track.uri callback:^(NSError *error) {
+		[self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
             if (error != nil) {
                 NSLog(@"*** Enabling playback got error: %@", error);
                 return;
@@ -177,7 +188,7 @@
         Track *track = [self.playlist.tracks objectAtIndex:indexPath.row];
         
         UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(15, 5, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
-        title.text = track.track.name;
+        title.text = track.title;
         
         if(indexPath.row == 0){
             title.textColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
@@ -187,11 +198,8 @@
         title.font = [UIFont fontWithName:@"Proxima Nova" size:18];
 
         UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+        artistLabel.text = track.artist;
         
-        if( [track.track.artists count] > 0){
-            SPTPartialArtist *artist = (SPTPartialArtist*)track.track.artists.firstObject;
-            artistLabel.text = artist.name;
-        }
 
         artistLabel.font = [UIFont fontWithName:@"Proxima Nova" size:16];
         artistLabel.textColor = [UIColor grayColor];
@@ -231,9 +239,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         self.playlist.spm = self.spm;
         
         Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-        if(![self.currentTrack.track.uri isEqual:firstTrack.track.uri]){
+        if(![self.currentTrack.uri isEqual:firstTrack.uri]){
             self.currentTrack = firstTrack;
-            [self.streamingPlayer playURI:self.currentTrack.track.uri callback:^(NSError *error) {
+            [self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
 
                 if (error != nil) {
                     NSLog(@"*** Enabling playback got error: %@", error);

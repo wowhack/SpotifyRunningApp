@@ -9,9 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <Spotify/Spotify.h>
 
-@interface Track : NSObject
+@interface Track : NSObject<NSCoding>
 
-@property (nonatomic) SPTTrack *track;
+@property (nonatomic) NSURL *uri;
+@property (nonatomic) NSString *artist;
+@property (nonatomic) NSString *title;
 @property (nonatomic) int spm;
 @property (nonatomic) NSTimeInterval offset;
 

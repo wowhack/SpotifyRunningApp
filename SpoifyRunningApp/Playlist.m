@@ -28,6 +28,19 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)decoder {
+    if (self = [super init]) {
+        self.unorderedTracks = [decoder decodeObjectForKey:@"unorderedTracks"];
+        self.name = [decoder decodeObjectForKey:@"name"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeObject:self.unorderedTracks forKey:@"unorderedTracks"];
+    [encoder encodeObject:self.name forKey:@"name"];
+}
+
 - (void)addTrack:(Track*)track
 {
     [_unorderedTracks addObject:track];

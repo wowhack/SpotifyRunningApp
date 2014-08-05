@@ -10,7 +10,7 @@
 
 @class Track;
 
-@interface Playlist : NSObject
+@interface Playlist : NSObject<NSCoding>
 
 @property (nonatomic) NSString* name;
 @property (nonatomic) NSArray* tracks;
