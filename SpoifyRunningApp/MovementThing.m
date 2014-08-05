@@ -80,10 +80,7 @@ dispatch_queue_t _serialQ;
         }
     }
     
-    // send every X second
     long spm = filteredSteps.count * 3;
-    
-    NSLog(@"spm: %ld", spm);
     _spm = spm;
     [self.delegate changeSpm:(int)spm];
     self.lastUpdate = [NSDate date];

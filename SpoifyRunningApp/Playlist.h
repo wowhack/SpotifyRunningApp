@@ -17,5 +17,6 @@
 @property (nonatomic) double spm;
 
 - (void)addTrack:(Track*)track;
+- (long)closestTrack:(int)spm;
 
 @end

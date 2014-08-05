@@ -46,10 +46,28 @@
     [_unorderedTracks addObject:track];
 }
 
+- (long)closestTrack:(int)spm {
+    
+    long closest = 0;
+    int closestSpm = 9999;
+    
+    int i = 0;
+    for(Track *track in self.tracks){
+        int spmDiff = abs(track.spm - spm);
+        if(spmDiff < closestSpm){
+            closestSpm = spmDiff;
+            closest = i;
+        }
+        i++;
+    }
+    return closest;
+}
+
+
 - (NSArray*)tracks{
     NSArray *sortedArray = [_unorderedTracks sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        int first = abs([(Track*)a spm] - _spm);
-        int second = abs([(Track*)b spm] - _spm);
+        int first = [(Track*)a spm];
+        int second = [(Track*)b spm];
         return first > second;
     }];
 

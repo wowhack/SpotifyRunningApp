@@ -22,15 +22,17 @@
 @property (nonatomic, strong) SPTAudioStreamingController *streamingPlayer;
 @property (nonatomic, strong) Playlist *playlist;
 @property (nonatomic) int spm;
-@property (nonatomic) Track *currentTrack;
+@property (nonatomic) long currentTrack;
 
 @property (nonatomic) MovementThing *movementThing;
 
 @property (nonatomic) NSDate *lastTrackChange;
 
 @property (nonatomic) UILabel *spmLabel;
+@property (nonatomic) UIButton *playLabel;
 
 @property (nonatomic) BOOL running;
+@property (nonatomic) BOOL playing;
 
 @property (nonatomic) BOOL bieberMode;
 @property (nonatomic) UIView *bieberView;
@@ -56,6 +58,16 @@
     spm.font = [UIFont fontWithName:@"ProximaNova-Light" size:60];
     spm.textColor = [UIColor whiteColor];
     self.spmLabel = spm;
+    
+    UIButton *play = [[UIButton  alloc] initWithFrame:CGRectMake(20, 130, CGRectGetWidth(self.tableView.bounds) - 40, 35)];
+    play.backgroundColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
+    play.titleLabel.textAlignment = NSTextAlignmentCenter;
+    play.layer.cornerRadius = 18.0;
+    play.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:20];
+    play.titleLabel.textColor = [UIColor whiteColor];
+    [play addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
+    [play setTitle:@"Play" forState:UIControlStateNormal];
+    self.playLabel = play;
     
     self.bieberTrack = [[Track alloc] init];
     self.bieberTrack.uri = [[NSURL alloc] initWithString:@"spotify:track:1wF1jbJ52izth0MiWR4oQj"];
@@ -148,15 +160,13 @@
                         NSData *playlistData = [NSKeyedArchiver archivedDataWithRootObject:self.playlist];
                         [userDefaults setObject:playlistData forKey:[playlist.uri absoluteString]];
                     }
-                    Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-                    self.currentTrack = firstTrack;
+                    self.currentTrack = 0;
                 }
                 
                 [self.tableView reloadData];
             }];
         } else {
-            Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-            self.currentTrack = firstTrack;
+            self.currentTrack = 0;
             
             [self.tableView reloadData];
         }
@@ -167,8 +177,14 @@
 
 -(void)playPause:(id)sender {
     NSLog(@"playPause isPlaying: %d", self.streamingPlayer.isPlaying);
-	if (self.streamingPlayer.isPlaying) {
-        
+	if (self.playing) {
+/*        if(self.spm == 0){
+            self.spm = 80;
+        }
+        [self changeSpm:self.spm + 1];*/
+        [self.playLabel setTitle:@"Play" forState:UIControlStateNormal];
+
+        self.playing = NO;
         [self.streamingPlayer setIsPlaying:NO callback:^(NSError *error) {
             if (error != nil) {
                 NSLog(@"*** Stop audio, got error: %@", error);
@@ -177,15 +193,19 @@
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSLog(@"pause isPlaying: %d", self.streamingPlayer.isPlaying);
-                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+                [self.playLabel setTitle:@"Play" forState:UIControlStateNormal];
+                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:self.currentTrack]] withRowAnimation:UITableViewRowAnimationNone];
                 [_movementThing stop];
                 self.running = NO;
             });
         }];
-        
+
 	} else {
-		[self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
+        [self.playLabel setTitle:@"Pause" forState:UIControlStateNormal];
+        self.playing = YES;
+        Track *track = [self.playlist.tracks objectAtIndex:self.currentTrack];
+        
+		[self.streamingPlayer playURI:track.uri callback:^(NSError *error) {
             if (error != nil) {
                 NSLog(@"*** Enabling playback got error: %@", error);
                 return;
@@ -197,8 +217,8 @@
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSLog(@"play isPlaying: %d", self.streamingPlayer.isPlaying);
-                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+                [self.playLabel setTitle:@"Pause" forState:UIControlStateNormal];
+                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:self.currentTrack inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
             });
             
         }];
@@ -230,19 +250,40 @@
 
 -(void)changeSpm:(int)spm
 {
+    NSLog(@"spm: %d", spm);
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         _spm = spm;
-        self.playlist.spm = spm;
+//        self.playlist.spm = spm;
         self.spmLabel.text = [NSString stringWithFormat:@"%d", spm];
 
         if(spm < 80 && self.running){
             [self bieberAlert:YES];
             self.running = NO;
         } else if(self.lastTrackChange.timeIntervalSinceNow <= -5 || (self.bieberMode && spm > 95)){
-            Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
-            if(![self.currentTrack.uri isEqual:firstTrack.uri]){
-                self.currentTrack = firstTrack;
-                [self playTrack:firstTrack];
+            
+            long closestTrack = [self.playlist closestTrack:spm];
+            if(self.currentTrack != closestTrack){
+                NSIndexPath *previousIndexPath = [NSIndexPath indexPathForRow:self.currentTrack inSection:0];
+                
+                self.currentTrack = closestTrack;
+                Track *track = [self.playlist.tracks objectAtIndex:closestTrack];
+                [self playTrack:track];
+                
+                [self.tableView beginUpdates];
+                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.currentTrack inSection:0];
+                [self.tableView reloadRowsAtIndexPaths:@[previousIndexPath, indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                
+                if(self.currentTrack == 0){
+                    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.currentTrack inSection:0]
+                                     atScrollPosition:UITableViewScrollPositionTop
+                                             animated:YES];
+                } else {
+                    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.currentTrack-1 inSection:0]
+                                          atScrollPosition:UITableViewScrollPositionTop
+                                                  animated:YES];
+                }
+                [self.tableView endUpdates];
             }
 
             if(spm > 100){
@@ -251,7 +292,7 @@
 
             [self bieberAlert:NO];
 
-            [self.tableView reloadData];
+            //[self.tableView reloadData];
         }
     }];
 }
@@ -275,18 +316,41 @@
 
 #pragma mark - Table view stuff
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 180;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), 300)];
+    view.backgroundColor = [UIColor blackColor];
+    
+    UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(0, 25, CGRectGetWidth(self.tableView.bounds), 20)];
+    header.textAlignment = NSTextAlignmentCenter;
+    header.text = @"Strides Per Minute";
+    header.font = [UIFont fontWithName:@"Proxima Nova" size:20];
+    header.textColor = [UIColor lightGrayColor];
+    
+    self.spmLabel.text = [NSString stringWithFormat:@"%d", _spm];
+    
+    [view addSubview:header];
+    [view addSubview:self.spmLabel];
+    
+
+    [view addSubview:self.playLabel];
+    
+    return view;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 0){
-        return 2;
-    } else {
-        return [self.playlist.tracks count];
-    }
+    return [self.playlist.tracks count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -294,93 +358,52 @@
     UITableViewCell *cell = [[UITableViewCell alloc] init];
     cell.backgroundColor = [UIColor clearColor];
 
-    if(indexPath.section == 0 && indexPath.row == 0){
-        UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(0, 25, CGRectGetWidth(self.tableView.bounds), 20)];
-        header.textAlignment = NSTextAlignmentCenter;
-        header.text = @"Strides Per Minute";
-        header.font = [UIFont fontWithName:@"Proxima Nova" size:20];
-        header.textColor = [UIColor lightGrayColor];
-        
-        self.spmLabel.text = [NSString stringWithFormat:@"%d", _spm];
-
-        [cell.contentView addSubview:header];
-        [cell.contentView addSubview:self.spmLabel];
-
-        cell.separatorInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, cell.bounds.size.width);
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if(indexPath.section == 0 && indexPath.row == 1){
-        UIButton *play = [[UIButton  alloc] initWithFrame:CGRectMake(20, 5, CGRectGetWidth(self.tableView.bounds) - 40, 35)];
-        play.backgroundColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
-        play.titleLabel.textAlignment = NSTextAlignmentCenter;
-        play.layer.cornerRadius = 18.0;
-        play.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:20];
-        play.titleLabel.textColor = [UIColor whiteColor];
+    Track *track = [self.playlist.tracks objectAtIndex:indexPath.row];
+    
+    int extra = 0;
+    
+    if(self.currentTrack == indexPath.row && self.playing){
+        PlayView *play = [[PlayView alloc] initWithFrame:CGRectMake(15, 15, 10, 30)];
+        play.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:play];
-        
-        if(self.streamingPlayer.isPlaying){
-            [play setTitle:@"Pause" forState:UIControlStateNormal];
-        } else {
-            [play setTitle:@"Play" forState:UIControlStateNormal];
-        }
-
-        [play addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
-        
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        cell.separatorInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, cell.bounds.size.width);
-    } else {
-        Track *track = [self.playlist.tracks objectAtIndex:indexPath.row];
-        
-        int extra = 0;
-        
-        if(indexPath.row == 0 && self.streamingPlayer.isPlaying){
-            PlayView *play = [[PlayView alloc] initWithFrame:CGRectMake(15, 15, 10, 30)];
-            play.backgroundColor = [UIColor clearColor];
-            [cell.contentView addSubview:play];
-            extra = 25;
-        }
-        
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(15+extra, 5, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
-        
-        title.text = track.title;
-        title.font = [UIFont fontWithName:@"Proxima Nova" size:18];
-        
-        if(indexPath.row == 0 && self.streamingPlayer.isPlaying){
-            title.textColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
-        } else {
-            title.textColor = [UIColor whiteColor];
-        }
-
-        UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15 + extra, 30, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
-        artistLabel.text = track.artist;
-        
-        artistLabel.font = [UIFont fontWithName:@"Proxima Nova" size:16];
-        artistLabel.textColor = [UIColor lightGrayColor];
-        
-        UILabel *spm = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.tableView.bounds) - 40, 5, 50, 30)];
-        spm.text = [NSString stringWithFormat:@"%d", track.spm];
-        spm.font = [UIFont fontWithName:@"Proxima Nova" size:16];
-        spm.textColor = [UIColor lightGrayColor];
-        
-        [cell.contentView addSubview:title];
-        [cell.contentView addSubview:artistLabel];
-        [cell.contentView addSubview:spm];
-        
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        extra = 25;
     }
+    
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(15+extra, 5, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+    
+    title.text = track.title;
+    title.font = [UIFont fontWithName:@"Proxima Nova" size:18];
+    
+    if(self.currentTrack == indexPath.row && self.playing){
+        title.textColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
+    } else {
+        title.textColor = [UIColor whiteColor];
+    }
+
+    UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15 + extra, 30, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+    artistLabel.text = track.artist;
+    
+    artistLabel.font = [UIFont fontWithName:@"Proxima Nova" size:16];
+    artistLabel.textColor = [UIColor lightGrayColor];
+    
+    UILabel *spm = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.tableView.bounds) - 40, 5, 50, 30)];
+    spm.text = [NSString stringWithFormat:@"%d", track.spm];
+    spm.font = [UIFont fontWithName:@"Proxima Nova" size:16];
+    spm.textColor = [UIColor lightGrayColor];
+    
+    [cell.contentView addSubview:title];
+    [cell.contentView addSubview:artistLabel];
+    [cell.contentView addSubview:spm];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
 
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 1){
-        return 67;
-    } else if(indexPath.section == 0 && indexPath.row == 0){
-        return 120;
-    } else {
-        return -1;
-    }
+    return 67;
 }
 
 - (void)tableView:(UITableView *)tableView
