@@ -10,7 +10,7 @@
 
 @class SPTSession;
 
-@interface PlaylistViewController : UIViewController
+@interface PlaylistViewController : UITableViewController
 
 -(void)handleNewSession:(SPTSession *)session;
 

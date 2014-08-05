@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A4DBB24C-CD3B-412F-B426-45C670B660EF</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SpotifyRunningApp</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>DDA4D9D60354E9C04FF39756CF27FE8423E88278</key>
+		<string>github.com:wowhack/SpotifyRunningApp.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SpotifyRunningApp.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>DDA4D9D60354E9C04FF39756CF27FE8423E88278</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:wowhack/SpotifyRunningApp.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>DDA4D9D60354E9C04FF39756CF27FE8423E88278</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DDA4D9D60354E9C04FF39756CF27FE8423E88278</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SpoifyRunningApp</string>
+		</dict>
+	</array>
+</dict>
+</plist>

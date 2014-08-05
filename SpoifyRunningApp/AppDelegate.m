@@ -22,10 +22,10 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
 
 @end
 
-
 @implementation AppDelegate
 
 -(void)enableAudioPlaybackWithSession:(SPTSession *)session {
+    NSLog(@"enableAudioPlaybackWithSession");
     NSData *sessionData = [NSKeyedArchiver archivedDataWithRootObject:session];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:sessionData forKey:kSessionUserDefaultsKey];
@@ -38,10 +38,14 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
 {
     // Override point for customization after application launch.
     
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = [[PlaylistViewController alloc] init];
+    [self.window makeKeyAndVisible];
+    NSLog(@"application1");
     id sessionData = [[NSUserDefaults standardUserDefaults] objectForKey:kSessionUserDefaultsKey];
     SPTSession *session = sessionData ? [NSKeyedUnarchiver unarchiveObjectWithData:sessionData] : nil;
     SPTAuth *auth = [SPTAuth defaultInstance];
-    
+
     if (session) {
         if ([session isValid]) {
             [self enableAudioPlaybackWithSession:session];
@@ -58,7 +62,7 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
     } else {
         NSURL *loginURL = [auth loginURLForClientId:kClientId
                                 declaredRedirectURL:[NSURL URLWithString:kCallbackURL]
-                                             scopes:@[SPTAuthStreamingScope]];
+                                scopes:@[SPTAuthStreamingScope]];
         
         double delayInSeconds = 0.1;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -69,12 +73,13 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
         });
     }
     
-
+    
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    
+    NSLog(@"application");
+
     SPTAuthCallback authCallback = ^(NSError *error, SPTSession *session) {
         // This is the callback that'll be triggered when auth is completed (or fails).
         
@@ -87,17 +92,8 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
         [[NSUserDefaults standardUserDefaults] setObject:sessionData
                                                   forKey:kSessionUserDefaultsKey];
         
-        
-
         [self enableAudioPlaybackWithSession:session];
     };
-    
-    /*
-     STEP 2: Handle the callback from the authentication service. -[SPAuth -canHandleURL:withDeclaredRedirectURL:]
-     helps us filter out URLs that aren't authentication URLs (i.e., URLs you use elsewhere in your application).
-     
-     Make the token swap endpoint URL matches your auth service URL.
-     */
     
     if ([[SPTAuth defaultInstance] canHandleURL:url withDeclaredRedirectURL:[NSURL URLWithString:kCallbackURL]]) {
         [[SPTAuth defaultInstance] handleAuthCallbackWithTriggeredAuthURL:url

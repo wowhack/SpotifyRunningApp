@@ -11,9 +11,9 @@
 		5022C02B1990CD9600648375 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C02A1990CD9600648375 /* AppDelegate.m */; };
 		5022C02E1990CD9600648375 /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C02D1990CD9600648375 /* PlaylistViewController.m */; };
 		5022C0331990CD9600648375 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5022C0321990CD9600648375 /* Images.xcassets */; };
-		5022C03F1990CD9600648375 /* SpoifyRunningAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C03E1990CD9600648375 /* SpoifyRunningAppTests.m */; };
 		5022C0491990CDCE00648375 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C0481990CDCE00648375 /* Spotify.framework */; };
 		5022C04B1990CDDA00648375 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C04A1990CDDA00648375 /* AVFoundation.framework */; };
+		5022C04F1990D49B00648375 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C04E1990D49B00648375 /* PlayViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,9 +37,10 @@
 		5022C0321990CD9600648375 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5022C0381990CD9600648375 /* SpotifyRunningAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpotifyRunningAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5022C03D1990CD9600648375 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5022C03E1990CD9600648375 /* SpoifyRunningAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpoifyRunningAppTests.m; sourceTree = "<group>"; };
 		5022C0481990CDCE00648375 /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Spotify.framework; path = "../../../Downloads/ios-sdk-beta-3 2/Spotify.framework"; sourceTree = "<group>"; };
 		5022C04A1990CDDA00648375 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		5022C04D1990D49B00648375 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
+		5022C04E1990D49B00648375 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +92,8 @@
 				5022C02D1990CD9600648375 /* PlaylistViewController.m */,
 				5022C0321990CD9600648375 /* Images.xcassets */,
 				5022C0251990CD9600648375 /* Supporting Files */,
+				5022C04D1990D49B00648375 /* PlayViewController.h */,
+				5022C04E1990D49B00648375 /* PlayViewController.m */,
 			);
 			path = SpoifyRunningApp;
 			sourceTree = "<group>";
@@ -107,7 +110,6 @@
 		5022C03B1990CD9600648375 /* SpoifyRunningAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				5022C03E1990CD9600648375 /* SpoifyRunningAppTests.m */,
 				5022C03C1990CD9600648375 /* Supporting Files */,
 			);
 			path = SpoifyRunningAppTests;
@@ -170,6 +172,7 @@
 				TargetAttributes = {
 					5022C0211990CD9600648375 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = 685GLAJ7DL;
 					};
 					5022C0371990CD9600648375 = {
 						CreatedOnToolsVersion = 6.0;
@@ -219,6 +222,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5022C04F1990D49B00648375 /* PlayViewController.m in Sources */,
 				5022C02E1990CD9600648375 /* PlaylistViewController.m in Sources */,
 				5022C02B1990CD9600648375 /* AppDelegate.m in Sources */,
 				5022C0281990CD9600648375 /* main.m in Sources */,
@@ -229,7 +233,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5022C03F1990CD9600648375 /* SpoifyRunningAppTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,14 +328,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/albert/Downloads/ios-sdk-beta-3",
 					2,
 				);
 				INFOPLIST_FILE = SpoifyRunningApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"OTHER_LDFLAGS[arch=*]" = " -ObjC";
 				PRODUCT_NAME = SpotifyRunningApp;
+				PROVISIONING_PROFILE = "8BE58EBB-F1A9-4BB3-93B6-EC8765AE2E61";
 			};
 			name = Debug;
 		};
@@ -341,14 +348,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/albert/Downloads/ios-sdk-beta-3",
 					2,
 				);
 				INFOPLIST_FILE = SpoifyRunningApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"OTHER_LDFLAGS[arch=*]" = " -ObjC";
 				PRODUCT_NAME = SpotifyRunningApp;
+				PROVISIONING_PROFILE = "8BE58EBB-F1A9-4BB3-93B6-EC8765AE2E61";
 			};
 			name = Release;
 		};
@@ -405,6 +416,7 @@
 				5022C0441990CD9600648375 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5022C0451990CD9600648375 /* Build configuration list for PBXNativeTarget "SpotifyRunningAppTests" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +425,7 @@
 				5022C0471990CD9600648375 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
