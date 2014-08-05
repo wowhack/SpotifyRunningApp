@@ -10,11 +10,11 @@
 #import <Spotify/Spotify.h>
 #import "PlaylistViewController.h"
 
-static NSString * const kClientId = @"29eca7f48dab4d62bfe330116916c8e1";
+static NSString * const kClientId = @"2aa6cecedab74a91b389b395d14cbc6b";
 static NSString * const kCallbackURL = @"blablabla://callback";
 
-static NSString * const kTokenSwapServiceURL = @"http://localhost:1234/swap";
-static NSString * const kTokenRefreshServiceURL = @"http://localhost:1234/refresh";
+static NSString * const kTokenSwapServiceURL = @"http://10.47.12.57:1234/swap";
+static NSString * const kTokenRefreshServiceURL = @"http://10.47.12.57:1234/refresh";
 
 static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
 
@@ -48,7 +48,7 @@ static NSString * const kSessionUserDefaultsKey = @"SpotifySession";
     UINavigationController *navView = [[UINavigationController alloc] initWithRootViewController:self.playlistViewCtrl];
     self.window.rootViewController = navView;
     [self.window makeKeyAndVisible];
-    NSLog(@"application1");
+
     id sessionData = [[NSUserDefaults standardUserDefaults] objectForKey:kSessionUserDefaultsKey];
     SPTSession *session = sessionData ? [NSKeyedUnarchiver unarchiveObjectWithData:sessionData] : nil;
     SPTAuth *auth = [SPTAuth defaultInstance];

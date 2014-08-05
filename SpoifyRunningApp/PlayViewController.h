@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <Spotify/Spotify.h>
+#import "MovementThing.h"
 
 @class SPTSession;
 
-@interface PlayViewController : UITableViewController<SPTAudioStreamingDelegate>
+@interface PlayViewController : UITableViewController<SPTAudioStreamingDelegate, MovementThingDelegate>
 
 -(void)handlePlaylist:(SPTPlaylistSnapshot*)playlist session:(SPTSession *)session ;
 

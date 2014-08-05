@@ -11,6 +11,7 @@
 #import "Track.h"
 #import <Spotify/Spotify.h>
 #import <QuartzCore/QuartzCore.h>
+#import "MovementThing.h"
 
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 
@@ -20,6 +21,8 @@
 @property (nonatomic, strong) Playlist *playlist;
 @property (nonatomic) int spm;
 @property (nonatomic) Track *currentTrack;
+
+@property (nonatomic) MovementThing *movementThing;
 
 @end
 
@@ -31,6 +34,9 @@
     self.tableView.separatorColor = [UIColor darkGrayColor];
 
     _spm = 100;
+    
+    _movementThing = [[MovementThing alloc] init];
+    _movementThing.delegate = self;
 }
 
 -(void)handlePlaylist:(SPTPlaylistSnapshot*)playlist session:(SPTSession *)session {
@@ -51,9 +57,10 @@
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         id playlistData = [userDefaults objectForKey:[playlist.uri absoluteString]];
         self.playlist = playlistData ? [NSKeyedUnarchiver unarchiveObjectWithData:playlistData] : nil;
-
+        
         if(!self.playlist){
             
+            NSLog(@"playlist uri: %@", playlist.uri);
             [SPTPlaylistSnapshot playlistWithURI:playlist.uri session:session callback:^(NSError *error, id object) {
                 if (error != nil) {
                     NSLog(@"*** Error fetching playlist: %@", error);
@@ -75,6 +82,7 @@
                         SPTPartialArtist *artist = (SPTPartialArtist*)sptTrack.artists.firstObject;
                         track.artist = artist.name;
                     }
+                    track.title = sptTrack.name;
                     
                     NSNumber *trackSpm = [userDefaults objectForKey:[sptTrack.uri absoluteString]];
                     if(!trackSpm){
@@ -113,8 +121,13 @@
                 
                 [self.tableView reloadData];
             }];
+        } else {
+            [self.tableView reloadData];
         }
+       
     }];
+
+
 }
 
 -(void)playPause:(id)sender {
@@ -127,10 +140,44 @@
                 NSLog(@"*** Enabling playback got error: %@", error);
                 return;
             }
+            
+            [_movementThing start];
         }];
 	}
 }
 
+-(void)changeSpm:(int)spm
+{
+    _spm = spm;
+    
+    self.playlist.spm = self.spm;
+    
+    Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
+    if(![self.currentTrack.uri isEqual:firstTrack.uri]){
+        self.currentTrack = firstTrack;
+        [self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
+            
+            if (error != nil) {
+                NSLog(@"*** Enabling playback got error: %@", error);
+                return;
+            }
+            
+            if(self.currentTrack.offset > 0){
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.streamingPlayer seekToOffset:self.currentTrack.offset callback:^(NSError *error) {
+                        if (error) {
+                            NSLog(@"*** Enabling playback got error: %@", error);
+                            return;
+                        }
+                    }];
+                });
+            }
+        }];
+    }
+    
+    [self.tableView reloadData];
+
+}
 
 #pragma mark - Table view stuff
 
@@ -153,13 +200,13 @@
     UITableViewCell *cell = [[UITableViewCell alloc] init];
     
     if(indexPath.section == 0 && indexPath.row == 0){
-        UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, CGRectGetWidth(self.tableView.bounds), 20)];
+        UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(0, 25, CGRectGetWidth(self.tableView.bounds), 20)];
         header.textAlignment = NSTextAlignmentCenter;
         header.text = @"Strides Per Minute";
         header.font = [UIFont fontWithName:@"Proxima Nova" size:20];
         header.textColor = [UIColor lightGrayColor];
         
-        UILabel *spm =  [[UILabel alloc] initWithFrame:CGRectMake(0, 40, CGRectGetWidth(self.tableView.bounds), 60)];
+        UILabel *spm =  [[UILabel alloc] initWithFrame:CGRectMake(0, 50, CGRectGetWidth(self.tableView.bounds), 60)];
         spm.textAlignment = NSTextAlignmentCenter;
         spm.text = [NSString stringWithFormat:@"%d", _spm];
         spm.font = [UIFont fontWithName:@"ProximaNova-Light" size:60];
@@ -223,7 +270,7 @@
     if(indexPath.section == 1){
         return 70;
     } else if(indexPath.section == 0 && indexPath.row == 0){
-        return 100;
+        return 120;
     } else {
         return -1;
     }
