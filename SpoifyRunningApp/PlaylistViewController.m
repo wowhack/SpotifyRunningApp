@@ -36,7 +36,6 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:YES];
-    
 }
 
 -(void)handleNewSession:(SPTSession *)session {

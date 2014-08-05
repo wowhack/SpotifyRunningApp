@@ -13,6 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MovementThing.h"
 #import "BieberAlertView.h"
+#import "PlayView.h"
 
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 
@@ -232,7 +233,7 @@
         if(spm < 80 && self.running){
             [self bieberAlert:YES];
             self.running = NO;
-        } else if(self.lastTrackChange.timeIntervalSinceNow <= -10 || (self.bieberMode && spm > 100)){
+        } else if(self.lastTrackChange.timeIntervalSinceNow <= -5 || (self.bieberMode && spm > 100)){
             Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
             if(![self.currentTrack.uri isEqual:firstTrack.uri]){
                 self.currentTrack = firstTrack;
@@ -283,7 +284,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [[UITableViewCell alloc] init];
-    
+    cell.backgroundColor = [UIColor clearColor];
+
     if(indexPath.section == 0 && indexPath.row == 0){
         UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(0, 25, CGRectGetWidth(self.tableView.bounds), 20)];
         header.textAlignment = NSTextAlignmentCenter;
@@ -321,17 +323,27 @@
     } else {
         Track *track = [self.playlist.tracks objectAtIndex:indexPath.row];
         
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(15, 5, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+        int extra = 0;
+        
+        if(indexPath.row == 0){
+            PlayView *play = [[PlayView alloc] initWithFrame:CGRectMake(15, 15, 10, 30)];
+            play.backgroundColor = [UIColor clearColor];
+            [cell.contentView addSubview:play];
+            extra = 25;
+        }
+        
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(15+extra, 5, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+        
         title.text = track.title;
+        title.font = [UIFont fontWithName:@"Proxima Nova" size:18];
         
         if(indexPath.row == 0){
             title.textColor = [UIColor colorWithRed:224.0/255.0 green:0.0/255.0 blue:112.0/255.0 alpha:1];
         } else {
             title.textColor = [UIColor whiteColor];
         }
-        title.font = [UIFont fontWithName:@"Proxima Nova" size:18];
 
-        UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
+        UILabel *artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(15 + extra, 30, CGRectGetWidth(self.tableView.bounds) - 50, 30)];
         artistLabel.text = track.artist;
         
         artistLabel.font = [UIFont fontWithName:@"Proxima Nova" size:16];
@@ -348,7 +360,6 @@
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    cell.backgroundColor = [UIColor clearColor];
 
     return cell;
 }

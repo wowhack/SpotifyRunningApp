@@ -57,6 +57,10 @@
         return 7;
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:1iXBApi39l5r6lJj9WEXXS"]){ // Hideaway
         return 63;
+    } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:2gQ4fOnSCITeNanGsuvxg5"]){ // First class riot
+        return 6.5;
+    } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:0XxzI6pndQPlI2hi1uDnWJ"]){ // Silent shout
+        return 22;
     } else {
         return _offset;
     }
