@@ -58,7 +58,15 @@
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:1iXBApi39l5r6lJj9WEXXS"]){ // Hideaway
         return 63;
     } else {
-        return 0;
+        return _offset;
+    }
+}
+
+-(int)spm{
+    if(_spm < 90){
+        return _spm*2;
+    } else {
+        return _spm;
     }
 }
 

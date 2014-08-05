@@ -19,5 +19,6 @@
 @property (nonatomic, weak) id<MovementThingDelegate> delegate;
 
 - (void)start;
+- (void)stop;
 
 @end

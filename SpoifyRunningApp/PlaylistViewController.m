@@ -10,7 +10,6 @@
 #import "PlayViewController.h"
 #import <Spotify/Spotify.h>
 
-
 @interface PlaylistViewController ()
 
 @property (nonatomic) SPTSession *session;
@@ -31,7 +30,13 @@
     self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
     //    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    
+}
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:YES];
+    
 }
 
 -(void)handleNewSession:(SPTSession *)session {

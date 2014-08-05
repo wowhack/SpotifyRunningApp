@@ -12,6 +12,7 @@
 #import <Spotify/Spotify.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MovementThing.h"
+#import "BieberAlertView.h"
 
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 
@@ -28,6 +29,12 @@
 
 @property (nonatomic) UILabel *spmLabel;
 
+@property (nonatomic) BOOL running;
+
+@property (nonatomic) BOOL bieberMode;
+@property (nonatomic) UIView *bieberView;
+@property (nonatomic) Track *bieberTrack;
+
 @end
 
 @implementation PlayViewController
@@ -37,10 +44,10 @@
     self.view.backgroundColor = [UIColor blackColor];
     self.tableView.separatorColor = [UIColor darkGrayColor];
 
-    _spm = 0;
+    self.spm = 0;
     
-    _movementThing = [[MovementThing alloc] init];
-    _movementThing.delegate = self;
+    self.movementThing = [[MovementThing alloc] init];
+    self.movementThing.delegate = self;
     
     UILabel *spm =  [[UILabel alloc] initWithFrame:CGRectMake(0, 50, CGRectGetWidth(self.tableView.bounds), 60)];
     spm.textAlignment = NSTextAlignmentCenter;
@@ -48,6 +55,10 @@
     spm.font = [UIFont fontWithName:@"ProximaNova-Light" size:60];
     spm.textColor = [UIColor whiteColor];
     self.spmLabel = spm;
+    
+    self.bieberTrack = [[Track alloc] init];
+    self.bieberTrack.uri = [[NSURL alloc] initWithString:@"spotify:track:1wF1jbJ52izth0MiWR4oQj"];
+    self.bieberTrack.offset = 63;
 }
 
 -(void)handlePlaylist:(SPTPlaylistSnapshot*)playlist session:(SPTSession *)session {
@@ -83,6 +94,8 @@
                 self.playlist.name = playlistSnapshot.name;
                 self.title = self.playlist.name;
                 
+                BOOL ready = YES;
+                
                 AFHTTPRequestOperationManager *httpManager = [AFHTTPRequestOperationManager manager];
                 httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
                 for(SPTTrack *sptTrack in playlistSnapshot.firstTrackPage.items){
@@ -97,6 +110,7 @@
                     
                     NSNumber *trackSpm = [userDefaults objectForKey:[sptTrack.uri absoluteString]];
                     if(!trackSpm){
+                        ready = NO;
                         NSString *url = [NSString stringWithFormat:@"http://developer.echonest.com/api/v4/song/profile?api_key=6HADM8BJ9XUXBMB3M&track_id=%@&bucket=id:spotify&bucket=audio_summary", sptTrack.uri];
                         
                         [httpManager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -107,8 +121,10 @@
                                 NSDictionary *summary = [song objectForKey:@"audio_summary"];
                                 NSNumber *tempo = [summary objectForKey:@"tempo"];
                                 
-                                [userDefaults setObject:tempo forKey:[sptTrack.uri absoluteString]];
                                 track.spm = [tempo intValue];
+                                
+                                [userDefaults setObject:tempo forKey:[sptTrack.uri absoluteString]];
+
                                 [self.playlist addTrack:track];
                             }
                             
@@ -124,8 +140,10 @@
                 
                 NSLog(@"count: %ld", (unsigned long)[self.playlist.tracks count]);
                 if([self.playlist.tracks count] > 0){
-                    NSData *playlistData = [NSKeyedArchiver archivedDataWithRootObject:self.playlist];
-                    [userDefaults setObject:playlistData forKey:[playlist.uri absoluteString]];
+                    if(ready){
+                        NSData *playlistData = [NSKeyedArchiver archivedDataWithRootObject:self.playlist];
+                        [userDefaults setObject:playlistData forKey:[playlist.uri absoluteString]];
+                    }
                     Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
                     self.currentTrack = firstTrack;
                 }
@@ -157,6 +175,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSLog(@"pause isPlaying: %d", self.streamingPlayer.isPlaying);
                 [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+                [_movementThing stop];
             });
         }];
         
@@ -180,6 +199,29 @@
 	}
 }
 
+-(void)playTrack:(Track*)track
+{
+    [self.streamingPlayer playURI:track.uri callback:^(NSError *error) {
+        
+        if (error != nil) {
+            NSLog(@"*** Enabling playback got error: %@", error);
+            return;
+        }
+        self.lastTrackChange = [NSDate date];
+        
+        if(track.offset > 0){
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.streamingPlayer seekToOffset:track.offset callback:^(NSError *error) {
+                    if (error) {
+                        NSLog(@"*** Enabling playback got error: %@", error);
+                        return;
+                    }
+                }];
+            });
+        }
+    }];
+}
+
 -(void)changeSpm:(int)spm
 {
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -187,35 +229,39 @@
         self.playlist.spm = spm;
         self.spmLabel.text = [NSString stringWithFormat:@"%d", spm];
 
-        if(self.lastTrackChange.timeIntervalSinceNow <= -10){
+        if(spm < 80 && self.running){
+            [self bieberAlert:YES];
+            self.running = NO;
+        } else if(self.lastTrackChange.timeIntervalSinceNow <= -10 && !self.bieberMode){
             Track *firstTrack = [self.playlist.tracks objectAtIndex:0];
             if(![self.currentTrack.uri isEqual:firstTrack.uri]){
                 self.currentTrack = firstTrack;
-                [self.streamingPlayer playURI:self.currentTrack.uri callback:^(NSError *error) {
-                    
-                    if (error != nil) {
-                        NSLog(@"*** Enabling playback got error: %@", error);
-                        return;
-                    }
-                    
-                    if(self.currentTrack.offset > 0){
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            [self.streamingPlayer seekToOffset:self.currentTrack.offset callback:^(NSError *error) {
-                                if (error) {
-                                    NSLog(@"*** Enabling playback got error: %@", error);
-                                    return;
-                                }
-                            }];
-                        });
-                    }
-                }];
-                self.lastTrackChange = [NSDate date];
+                [self playTrack:firstTrack];
+            }
+            if(spm > 100){
+                self.running = YES;
+                [self bieberAlert:NO];
             }
             [self.tableView reloadData];
         }
     }];
 
 }
+
+- (void)bieberAlert:(BOOL)show
+{
+    if(show && !self.bieberView){
+        UIView *bieberView = [[BieberAlertView alloc] initWithFrame:self.view.bounds];
+        [self.tableView addSubview:bieberView];
+        [self.tableView bringSubviewToFront:bieberView];
+        [self playTrack:self.bieberTrack];
+        self.bieberView = bieberView;
+    } else if(self.bieberView){
+        [self.bieberView removeFromSuperview];
+        self.bieberView = nil;
+    }
+}
+
 
 #pragma mark - Table view stuff
 
@@ -309,7 +355,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section == 1){
-        return 70;
+        return 67;
     } else if(indexPath.section == 0 && indexPath.row == 0){
         return 120;
     } else {

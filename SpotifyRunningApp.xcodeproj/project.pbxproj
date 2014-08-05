@@ -28,6 +28,7 @@
 		503043CE199112F400E538A2 /* ProximaNova-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 503043C3199112B700E538A2 /* ProximaNova-Semibold.otf */; };
 		503043CF199112F400E538A2 /* ProximaNova-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 503043C4199112B700E538A2 /* ProximaNova-SemiboldItalic.otf */; };
 		503043D2199124E100E538A2 /* MovementThing.m in Sources */ = {isa = PBXBuildFile; fileRef = 503043D1199124E100E538A2 /* MovementThing.m */; };
+		50F0A08919915711002DABFC /* BieberAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F0A08819915711002DABFC /* BieberAlertView.m */; };
 		6AD5DB184D014535864D9E18 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B54C27F559443DCA67DFA19 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +75,8 @@
 		503043C4199112B700E538A2 /* ProximaNova-SemiboldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-SemiboldItalic.otf"; sourceTree = "<group>"; };
 		503043D0199124E100E538A2 /* MovementThing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovementThing.h; sourceTree = "<group>"; };
 		503043D1199124E100E538A2 /* MovementThing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovementThing.m; sourceTree = "<group>"; };
+		50F0A08719915711002DABFC /* BieberAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BieberAlertView.h; path = ../BieberAlertView.h; sourceTree = "<group>"; };
+		50F0A08819915711002DABFC /* BieberAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BieberAlertView.m; path = ../BieberAlertView.m; sourceTree = "<group>"; };
 		9B54C27F559443DCA67DFA19 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -138,6 +141,8 @@
 				503043B71990F05900E538A2 /* Playlist.m */,
 				503043D0199124E100E538A2 /* MovementThing.h */,
 				503043D1199124E100E538A2 /* MovementThing.m */,
+				50F0A08719915711002DABFC /* BieberAlertView.h */,
+				50F0A08819915711002DABFC /* BieberAlertView.m */,
 			);
 			path = SpoifyRunningApp;
 			sourceTree = "<group>";
@@ -338,6 +343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50F0A08919915711002DABFC /* BieberAlertView.m in Sources */,
 				5022C04F1990D49B00648375 /* PlayViewController.m in Sources */,
 				503043B81990F05900E538A2 /* Playlist.m in Sources */,
 				5022C02E1990CD9600648375 /* PlaylistViewController.m in Sources */,

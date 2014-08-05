@@ -23,6 +23,7 @@ const double kSeconds = 20.0;
 @property (nonatomic) double lastZ;
 @property (nonatomic) long spm;
 @property (nonatomic) NSDate *lastUpdate;
+@property (nonatomic) BOOL on;
 
 @end
 
@@ -66,39 +67,46 @@ dispatch_queue_t _serialQ;
     };
 
     [_motionManager startGyroUpdatesToQueue:opQueue withHandler:gyroHandler];
+    self.on = YES;
+    [self sendSpm];
+}
+
+- (void)sendSpm {
+    
+    NSMutableArray *filteredSteps = [[NSMutableArray alloc] init];
+    for(NSDate *step in self.steps) {
+        if(step.timeIntervalSinceNow > -kSeconds){
+            [filteredSteps addObject:step];
+        }
+    }
+    
+    // send every X second
+    long spm = filteredSteps.count * 3;
+    
+    NSLog(@"spm: %ld", spm);
+    _spm = spm;
+    [self.delegate changeSpm:(int)spm];
+    self.lastUpdate = [NSDate date];
+    
+    if(self.on){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self sendSpm];
+        });
+    }
+}
+
+- (void)stop
+{
+    self.on = NO;
+    [_motionManager stopGyroUpdates];
 }
 
 - (void)updateSpm:(BOOL)addStep {
     
     dispatch_sync(_serialQ, ^{
-        
         if(addStep){
             [self.steps addObject:[NSDate date]];
         }
-        
-        NSMutableArray *filteredSteps = [[NSMutableArray alloc] init];
-        for(NSDate *step in self.steps) {
-            if(step.timeIntervalSinceNow > -kSeconds){
-                [filteredSteps addObject:step];
-            }
-        }
-        
-        long spm = filteredSteps.count * 3;
-        if((!self.lastUpdate || self.lastUpdate.timeIntervalSinceNow < -1) && abs(_spm-spm) > 5){
-            NSLog(@"spm: %ld", spm);
-            _spm = spm;
-            [self.delegate changeSpm:(int)spm];
-            self.lastUpdate = [NSDate date];
-        }
-        
-        /*
-         if(self.items.isEmpty || self.items[self.items.endIndex-1].0.timeIntervalSinceNow < -10)
-         {
-         self.items += (NSDate(), spm)
-         self.tableView.reloadData()
-         }*/
-        
-//        NSLog(@"steps per minute: %ld", spm);
     });
 }
 
