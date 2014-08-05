@@ -9,10 +9,11 @@
 /* Begin PBXBuildFile section */
 		5022C0281990CD9600648375 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C0271990CD9600648375 /* main.m */; };
 		5022C02B1990CD9600648375 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C02A1990CD9600648375 /* AppDelegate.m */; };
-		5022C02E1990CD9600648375 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C02D1990CD9600648375 /* ViewController.m */; };
-		5022C0311990CD9600648375 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5022C02F1990CD9600648375 /* Main.storyboard */; };
+		5022C02E1990CD9600648375 /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C02D1990CD9600648375 /* PlaylistViewController.m */; };
 		5022C0331990CD9600648375 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5022C0321990CD9600648375 /* Images.xcassets */; };
 		5022C03F1990CD9600648375 /* SpoifyRunningAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5022C03E1990CD9600648375 /* SpoifyRunningAppTests.m */; };
+		5022C0491990CDCE00648375 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C0481990CDCE00648375 /* Spotify.framework */; };
+		5022C04B1990CDDA00648375 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5022C04A1990CDDA00648375 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,18 +27,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5022C0221990CD9600648375 /* SpoifyRunningApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpoifyRunningApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5022C0221990CD9600648375 /* SpotifyRunningApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotifyRunningApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5022C0261990CD9600648375 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5022C0271990CD9600648375 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5022C0291990CD9600648375 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5022C02A1990CD9600648375 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		5022C02C1990CD9600648375 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		5022C02D1990CD9600648375 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		5022C0301990CD9600648375 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5022C02C1990CD9600648375 /* PlaylistViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaylistViewController.h; sourceTree = "<group>"; };
+		5022C02D1990CD9600648375 /* PlaylistViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaylistViewController.m; sourceTree = "<group>"; };
 		5022C0321990CD9600648375 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		5022C0381990CD9600648375 /* SpoifyRunningAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpoifyRunningAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5022C0381990CD9600648375 /* SpotifyRunningAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpotifyRunningAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5022C03D1990CD9600648375 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5022C03E1990CD9600648375 /* SpoifyRunningAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpoifyRunningAppTests.m; sourceTree = "<group>"; };
+		5022C0481990CDCE00648375 /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Spotify.framework; path = "../../../Downloads/ios-sdk-beta-3 2/Spotify.framework"; sourceTree = "<group>"; };
+		5022C04A1990CDDA00648375 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +47,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5022C04B1990CDDA00648375 /* AVFoundation.framework in Frameworks */,
+				5022C0491990CDCE00648375 /* Spotify.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +65,8 @@
 		5022C0191990CD9600648375 = {
 			isa = PBXGroup;
 			children = (
+				5022C04A1990CDDA00648375 /* AVFoundation.framework */,
+				5022C0481990CDCE00648375 /* Spotify.framework */,
 				5022C0241990CD9600648375 /* SpoifyRunningApp */,
 				5022C03B1990CD9600648375 /* SpoifyRunningAppTests */,
 				5022C0231990CD9600648375 /* Products */,
@@ -70,8 +76,8 @@
 		5022C0231990CD9600648375 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5022C0221990CD9600648375 /* SpoifyRunningApp.app */,
-				5022C0381990CD9600648375 /* SpoifyRunningAppTests.xctest */,
+				5022C0221990CD9600648375 /* SpotifyRunningApp.app */,
+				5022C0381990CD9600648375 /* SpotifyRunningAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,9 +87,8 @@
 			children = (
 				5022C0291990CD9600648375 /* AppDelegate.h */,
 				5022C02A1990CD9600648375 /* AppDelegate.m */,
-				5022C02C1990CD9600648375 /* ViewController.h */,
-				5022C02D1990CD9600648375 /* ViewController.m */,
-				5022C02F1990CD9600648375 /* Main.storyboard */,
+				5022C02C1990CD9600648375 /* PlaylistViewController.h */,
+				5022C02D1990CD9600648375 /* PlaylistViewController.m */,
 				5022C0321990CD9600648375 /* Images.xcassets */,
 				5022C0251990CD9600648375 /* Supporting Files */,
 			);
@@ -119,9 +124,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5022C0211990CD9600648375 /* SpoifyRunningApp */ = {
+		5022C0211990CD9600648375 /* SpotifyRunningApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5022C0421990CD9600648375 /* Build configuration list for PBXNativeTarget "SpoifyRunningApp" */;
+			buildConfigurationList = 5022C0421990CD9600648375 /* Build configuration list for PBXNativeTarget "SpotifyRunningApp" */;
 			buildPhases = (
 				5022C01E1990CD9600648375 /* Sources */,
 				5022C01F1990CD9600648375 /* Frameworks */,
@@ -131,14 +136,14 @@
 			);
 			dependencies = (
 			);
-			name = SpoifyRunningApp;
+			name = SpotifyRunningApp;
 			productName = SpoifyRunningApp;
-			productReference = 5022C0221990CD9600648375 /* SpoifyRunningApp.app */;
+			productReference = 5022C0221990CD9600648375 /* SpotifyRunningApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5022C0371990CD9600648375 /* SpoifyRunningAppTests */ = {
+		5022C0371990CD9600648375 /* SpotifyRunningAppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5022C0451990CD9600648375 /* Build configuration list for PBXNativeTarget "SpoifyRunningAppTests" */;
+			buildConfigurationList = 5022C0451990CD9600648375 /* Build configuration list for PBXNativeTarget "SpotifyRunningAppTests" */;
 			buildPhases = (
 				5022C0341990CD9600648375 /* Sources */,
 				5022C0351990CD9600648375 /* Frameworks */,
@@ -149,9 +154,9 @@
 			dependencies = (
 				5022C03A1990CD9600648375 /* PBXTargetDependency */,
 			);
-			name = SpoifyRunningAppTests;
+			name = SpotifyRunningAppTests;
 			productName = SpoifyRunningAppTests;
-			productReference = 5022C0381990CD9600648375 /* SpoifyRunningAppTests.xctest */;
+			productReference = 5022C0381990CD9600648375 /* SpotifyRunningAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -172,7 +177,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5022C01D1990CD9600648375 /* Build configuration list for PBXProject "SpoifyRunningApp" */;
+			buildConfigurationList = 5022C01D1990CD9600648375 /* Build configuration list for PBXProject "SpotifyRunningApp" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -185,8 +190,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5022C0211990CD9600648375 /* SpoifyRunningApp */,
-				5022C0371990CD9600648375 /* SpoifyRunningAppTests */,
+				5022C0211990CD9600648375 /* SpotifyRunningApp */,
+				5022C0371990CD9600648375 /* SpotifyRunningAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -196,7 +201,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5022C0311990CD9600648375 /* Main.storyboard in Resources */,
 				5022C0331990CD9600648375 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,7 +219,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5022C02E1990CD9600648375 /* ViewController.m in Sources */,
+				5022C02E1990CD9600648375 /* PlaylistViewController.m in Sources */,
 				5022C02B1990CD9600648375 /* AppDelegate.m in Sources */,
 				5022C0281990CD9600648375 /* main.m in Sources */,
 			);
@@ -234,21 +238,10 @@
 /* Begin PBXTargetDependency section */
 		5022C03A1990CD9600648375 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5022C0211990CD9600648375 /* SpoifyRunningApp */;
+			target = 5022C0211990CD9600648375 /* SpotifyRunningApp */;
 			targetProxy = 5022C0391990CD9600648375 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		5022C02F1990CD9600648375 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5022C0301990CD9600648375 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		5022C0401990CD9600648375 /* Debug */ = {
@@ -332,9 +325,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/albert/Downloads/ios-sdk-beta-3",
+					2,
+				);
 				INFOPLIST_FILE = SpoifyRunningApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SpotifyRunningApp;
 			};
 			name = Debug;
 		};
@@ -343,9 +341,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/albert/Downloads/ios-sdk-beta-3",
+					2,
+				);
 				INFOPLIST_FILE = SpoifyRunningApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SpotifyRunningApp;
 			};
 			name = Release;
 		};
@@ -363,7 +366,7 @@
 				);
 				INFOPLIST_FILE = SpoifyRunningAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SpotifyRunningAppTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpoifyRunningApp.app/SpoifyRunningApp";
 			};
 			name = Debug;
@@ -378,7 +381,7 @@
 				);
 				INFOPLIST_FILE = SpoifyRunningAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SpotifyRunningAppTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpoifyRunningApp.app/SpoifyRunningApp";
 			};
 			name = Release;
@@ -386,7 +389,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5022C01D1990CD9600648375 /* Build configuration list for PBXProject "SpoifyRunningApp" */ = {
+		5022C01D1990CD9600648375 /* Build configuration list for PBXProject "SpotifyRunningApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5022C0401990CD9600648375 /* Debug */,
@@ -395,7 +398,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5022C0421990CD9600648375 /* Build configuration list for PBXNativeTarget "SpoifyRunningApp" */ = {
+		5022C0421990CD9600648375 /* Build configuration list for PBXNativeTarget "SpotifyRunningApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5022C0431990CD9600648375 /* Debug */,
@@ -403,7 +406,7 @@
 			);
 			defaultConfigurationIsVisible = 0;
 		};
-		5022C0451990CD9600648375 /* Build configuration list for PBXNativeTarget "SpoifyRunningAppTests" */ = {
+		5022C0451990CD9600648375 /* Build configuration list for PBXNativeTarget "SpotifyRunningAppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5022C0461990CD9600648375 /* Debug */,

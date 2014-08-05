@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@class SPTSession;
 
+@interface PlaylistViewController : UIViewController
+
+-(void)handleNewSession:(SPTSession *)session;
 
 @end
 
