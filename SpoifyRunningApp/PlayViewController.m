@@ -123,6 +123,11 @@
                     track.title = sptTrack.name;
                     
                     NSNumber *trackSpm = [userDefaults objectForKey:[sptTrack.uri absoluteString]];
+                    
+                    if([[track.uri absoluteString] isEqualToString:@"spotify:track:3AVZaAbDvR6rs2NN4n0aAF"]){
+                        trackSpm = [NSNumber numberWithInt:140];
+                    }
+                    
                     if(!trackSpm){
                         
                         NSLog(@"no spm: %@", sptTrack.name);
@@ -389,7 +394,7 @@
     UILabel *spm = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.tableView.bounds) - 40, 5, 50, 30)];
     spm.text = [NSString stringWithFormat:@"%d", track.spm];
     spm.font = [UIFont fontWithName:@"Proxima Nova" size:16];
-    spm.textColor = [UIColor lightGrayColor];
+    spm.textColor = [UIColor whiteColor];
     
     [cell.contentView addSubview:title];
     [cell.contentView addSubview:artistLabel];

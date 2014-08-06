@@ -61,7 +61,17 @@
         return 6.5;
     } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:0XxzI6pndQPlI2hi1uDnWJ"]){ // Silent shout
         return 22;
-    } else {
+    } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:0cKZNMiMryPO6ITtZqUBfL"]){ // Dominik Eulberg
+        return 114;
+    } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:2W6ozC33ofTv2DaptuzUSh"]){ // Digitalism
+        return 14.5;
+    } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:74BIp1TJD5FFWgwE05e9So"]){ // Shadowplay
+        return 31;
+    } else if([[self.uri absoluteString] isEqualToString:@"spotify:track:3AVZaAbDvR6rs2NN4n0aAF"]){ // Ace of spades
+        return 8;
+    }
+    
+    else {
         return _offset;
     }
 }
