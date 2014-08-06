@@ -72,6 +72,23 @@
     self.bieberTrack = [[Track alloc] init];
     self.bieberTrack.uri = [[NSURL alloc] initWithString:@"spotify:track:1wF1jbJ52izth0MiWR4oQj"];
     self.bieberTrack.offset = 63;
+    
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+    [self bieberAlert:NO];
+    [self.playLabel setTitle:@"Play" forState:UIControlStateNormal];
+    
+    self.playing = NO;
+    [self.streamingPlayer setIsPlaying:NO callback:^(NSError *error) {
+        if (error != nil) {
+            NSLog(@"*** Stop audio, got error: %@", error);
+            return;
+        }
+        
+        [self.tableView reloadData];
+        [_movementThing stop];
+    }];
 }
 
 -(void)handlePlaylist:(SPTPlaylistSnapshot*)playlist session:(SPTSession *)session {
@@ -91,7 +108,6 @@
         
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         id playlistData = [userDefaults objectForKey:[playlist.uri absoluteString]];
-        
         self.playlist = playlistData ? [NSKeyedUnarchiver unarchiveObjectWithData:playlistData] : nil;
         
         if(!self.playlist){
@@ -183,10 +199,11 @@
 -(void)playPause:(id)sender {
     NSLog(@"playPause isPlaying: %d", self.streamingPlayer.isPlaying);
 	if (self.playing) {
-/*        if(self.spm == 0){
+        /*if(self.spm == 0){
             self.spm = 80;
         }
         [self changeSpm:self.spm + 1];*/
+
         [self.playLabel setTitle:@"Play" forState:UIControlStateNormal];
 
         self.playing = NO;
@@ -196,13 +213,11 @@
                 return;
             }
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                NSLog(@"pause isPlaying: %d", self.streamingPlayer.isPlaying);
-                [self.playLabel setTitle:@"Play" forState:UIControlStateNormal];
-                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:self.currentTrack]] withRowAnimation:UITableViewRowAnimationNone];
-                [_movementThing stop];
-                self.running = NO;
-            });
+            [self.playLabel setTitle:@"Play" forState:UIControlStateNormal];
+            [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:self.currentTrack]] withRowAnimation:UITableViewRowAnimationNone];
+            [_movementThing stop];
+            self.running = NO;
+        
         }];
 
 	} else {
@@ -220,12 +235,8 @@
             
             self.lastTrackChange = [NSDate date];
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                NSLog(@"play isPlaying: %d", self.streamingPlayer.isPlaying);
-                [self.playLabel setTitle:@"Pause" forState:UIControlStateNormal];
-                [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:self.currentTrack inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-            });
-            
+            [self.playLabel setTitle:@"Pause" forState:UIControlStateNormal];
+            [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:self.currentTrack inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
         }];
 	}
 }
@@ -305,12 +316,19 @@
 - (void)bieberAlert:(BOOL)show
 {
     if(show && !self.bieberMode){
-        UIView *bieberView = [[BieberAlertView alloc] initWithFrame:self.view.bounds];
-        [self.tableView addSubview:bieberView];
-        [self.tableView bringSubviewToFront:bieberView];
         [self playTrack:self.bieberTrack];
-        self.bieberMode = YES;
+        
+        UIView *bieberView = [[BieberAlertView alloc] initWithFrame:self.view.bounds];
         self.bieberView = bieberView;
+        
+        UITapGestureRecognizer *singleFingerTap =
+        [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                action:@selector(handleSingleTap:)];
+        [self.bieberView addGestureRecognizer:singleFingerTap];
+        
+        [self.tableView addSubview:self.bieberView];
+        [self.tableView bringSubviewToFront:self.bieberView];
+        self.bieberMode = YES;
     } else if(self.bieberMode){
         [self.bieberView removeFromSuperview];
         self.bieberView = nil;

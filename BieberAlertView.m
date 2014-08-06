@@ -37,7 +37,7 @@ UIView *rect;
         bieberLabel.lineBreakMode = NSLineBreakByWordWrapping;
         bieberLabel.textAlignment = NSTextAlignmentCenter;
         bieberLabel.text = @"BIEBER ALERT! RUN!";
-        bieberLabel.font = [UIFont systemFontOfSize:30];
+        bieberLabel.font = [UIFont systemFontOfSize:34];
         [self addSubview:bieberLabel];
         
         UIImage *image = [UIImage imageNamed:@"photo.png"];

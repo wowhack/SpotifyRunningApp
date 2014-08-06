@@ -14,7 +14,7 @@ typedef enum {
     kBackward
 } ArmDirection;
 
-const double kSeconds = 20.0;
+const double kSeconds = 10.0;
 
 @interface MovementThing()
 
