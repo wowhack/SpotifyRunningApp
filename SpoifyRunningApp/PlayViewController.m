@@ -214,7 +214,7 @@
             }
             
             [self.playLabel setTitle:@"Play" forState:UIControlStateNormal];
-            [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:self.currentTrack]] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:self.currentTrack inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
             [_movementThing stop];
             self.running = NO;
         
